@@ -19,6 +19,7 @@ if (is.na(value)) return(tree$node_id);
 log.val <- NA
 
 if (tree$rule$relation==">=") {
+  if (is.ordered(value)) { value <- as.numeric(as.character(value)) }
 	log.val <- value >= tree$rule$value
 } else if (tree$rule$relation=="%in%") {
 	log.val <- value %in% tree$rule$value
@@ -38,7 +39,15 @@ if (!log.val)
 
 traverse <- function(tree, dataset)
 {
-	return(apply(dataset,1, FUN=traverse.rec, tree))
+  if (class(dataset)=="data.frame") {
+    result <- rep(NA, dim(dataset)[1])
+    for (i in 1:dim(dataset)[1]) {
+      result[i] <- traverse.rec(row = dataset[i,],tree = tree)
+    }
+    return(result)
+  } else {
+  	return(apply(X=dataset,MARGIN=1, FUN=traverse.rec, tree))
+  }
 }
 
 #traverse(tree, dataset)

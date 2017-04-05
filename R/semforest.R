@@ -23,6 +23,8 @@ semforest <- function(model, data, control=NULL,
     control <- arguments$semforest.control
     warning("Warning! Deprecated use of semforest.control!")
   } 
+  
+
 
   if ("seeds" %in% names(arguments)) {
     seeds<- arguments$seeds
@@ -62,6 +64,12 @@ semforest <- function(model, data, control=NULL,
   }
   semforest.control <- control
   
+  
+  if (!is.na(semforest.control$semtree.control$seed)) {
+    stop(paste("Error! semtree.control object inside semforest.control has a seed.\n",
+               "Instead, use seed argument of semforest() function to specify seeds for reproducible analysis!"))
+  }
+  
 	#if (!checkControl(semforest.control))
 	#{
   #  stop("Unknown options in semforest.control object!");
@@ -97,7 +105,11 @@ semforest <- function(model, data, control=NULL,
 		seeds <- rep(NA, semforest.control$num.trees)		
 	} else if (length(seeds)==1 && seeds==TRUE) {
 		seeds <- runif(n=semforest.control$num.trees,max=.Machine$integer.max)
-	} 
+	}  else {
+	  if (length(seeds) != semforest.control$num.trees) {
+	    stop("Number of seeds given does not match number of trees!")
+	  }
+	}
 
   if (!is.null(debugtree)) {
     skip <- rep(TRUE, semforest.control$num.trees)
@@ -112,13 +124,13 @@ semforest <- function(model, data, control=NULL,
   if (is.null(cluster)) {
     trees <- mapply(FUN=semtreeApplyWrapper, 
                       forest.data, seeds, skip, 
-                      MoreArgs=list(model,semforest.control$semtree.control,
-                                    with.error.handler, covariates, constraints),SIMPLIFY=FALSE)
+                      MoreArgs=list(model=model,semtree.control=semforest.control$semtree.control,
+                                    with.error.handler, predictors=covariates, constraints),SIMPLIFY=FALSE)
   } else {
     trees <- clusterMap(cl=cluster, fun=semtreeApplyWrapper, 
                forest.data, seeds, skip, 
                MoreArgs=list(model,semforest.control$semtree.control,
-                             with.error.handler, covariates, constraints),
+                             with.error.handler, predictors=covariates, constraints),
                SIMPLIFY=FALSE)
   }
 	

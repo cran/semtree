@@ -237,11 +237,14 @@ growTree <- function(model=NULL, mydata=NULL,
   # cov.name	: name of best candidate
   
   # store the value of the selected test statistic
-  node$lr <- result$LL.max
-  node$result <- result
+  node$lr <- NA
+  if (!is.null(result)) {
+   node$lr <- result$LL.max
+   node$result <- result
+  }
   
   # if no split found, exit node without continuing growth
-  if (is.null(result$LL.max)) {
+  if (is.null(result) || is.null(result$LL.max)) {
     if (control$verbose) {
       message("Best Likelihood Ratio was NULL. Stop splitting")
     }
@@ -249,7 +252,7 @@ growTree <- function(model=NULL, mydata=NULL,
   }
   
   if (control$verbose) {
-    message("Best LR ",round(result$LL.max,7)," : ",result$name.max," at covariate column ",
+    message("Best LR ",round(node$lr,7)," : ",result$name.max," at covariate column ",
             result$col.max,"\n");
   }
   

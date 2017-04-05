@@ -1,7 +1,8 @@
 evaluateDataLikelihood <-
 function(model, data, data_type="raw")
 {
-	
+  if (inherits(model,"MxModel") || inherits(model,"MxRAMModel")) {
+  
 	# this is to trick the strict CRAN check
 	objective <- NULL
 	#
@@ -47,15 +48,36 @@ function(model, data, data_type="raw")
 		
 		
 		model <- setData(model, data)
-		
 		run <- OpenMx::mxRun(model, silent=T, useOptimizer=F, suppressWarnings=T);
 		result <- getLikelihood(run)
 
-		
-		
-		
-	
-		
-	
+
 		return(result);
+		
+		
+  } else if (inherits(model,"lavaan")) {
+  
+    # replace data
+    model <- mxAddNewModelData(model=model,data=data)
+
+    # fix all parameters
+    model@ParTable$free <- 0
+    
+    # rerun model
+    modelrun <- try(suppressWarnings(
+      eval(parse(text=paste(model@Options$model.type,'(parTable(model),data=data,missing=\'',
+                            model@Options$missing,'\')',sep="")))),silent=FALSE)
+    
+    
+    # evaluate likelihood
+    ll <- -2*logLik(modelrun)
+    
+    stop("The chosen combination of parameters for semtree is not yet supported with lavaan! Please use OpenMx model specification!")
+    
+    return(ll)
+    
+    } else {
+    stop("The chosen combination of parameters for semtree is not yet supported! Please use OpenMx model specification!")
+    
+    }
 }
