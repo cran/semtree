@@ -58,21 +58,23 @@ function(model, data, data_type="raw")
   } else if (inherits(model,"lavaan")) {
   
     # replace data
-    model <- mxAddNewModelData(model=model,data=data)
+    #model <- mxAddNewModelData(model=model,data=data)
 
     # fix all parameters
-    model@ParTable$free <- 0
+    #model@ParTable$free <- rep(0, length(model@ParTable$free))
     
     # rerun model
-    modelrun <- try(suppressWarnings(
-      eval(parse(text=paste(model@Options$model.type,'(parTable(model),data=data,missing=\'',
-                            model@Options$missing,'\')',sep="")))),silent=FALSE)
+    #modelrun <- try(suppressWarnings(
+    #  eval(parse(text=paste(model@Options$model.type,'(lavaan::parTable(model),data=data,missing=\'',
+    #                        model@Options$missing,'\')',sep="")))),silent=FALSE)
     
+    modelrun <- lavaan::lavaan(lavaan::parTable(model), data=data,
+    control = list(optim.method="none", optim.force.converged=TRUE))
     
     # evaluate likelihood
-    ll <- -2*logLik(modelrun)
+    ll <- -2*lavaan::logLik(modelrun)
     
-    stop("The chosen combination of parameters for semtree is not yet supported with lavaan! Please use OpenMx model specification!")
+   ## stop("The chosen combination of parameters for semtree is not yet supported with lavaan! Please use OpenMx model specification!")
     
     return(ll)
     

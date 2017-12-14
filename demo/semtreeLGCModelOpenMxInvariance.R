@@ -1,5 +1,15 @@
-set.seed(789)
+# DEMO FOR SEMTREE!
+
+# INSTALL THE PACKAGE
 require("semtree")
+
+# ORGANIZE DATA BY TYPE FOR COVARIATES.
+# SOME COVARIATES ARE ORGANIZED IN THE DATA. MODEL VARIABLES AND 
+# CAOVARIATES DO NOT NEED TO BE ORDERED IN THE DATASET. ONLY VARIABLE
+# TYPE NEEDS TO BE DEFINED FOR THE COVARIATES (FACTOR/ORDERED/NUMERIC)
+# BE AWARE OF THE EXPONENTIAL GROWTH OF MODEL COMPARISON WITH INCREASES
+# IN NUMBER OF FACTORS PER A COVARIATE.
+
 data(lgcm)
 
 lgcm$agegroup <- as.ordered(lgcm$agegroup)
@@ -71,52 +81,28 @@ lgcModel <- mxModel("Linear Growth Curve Model Path Specification",
 # TREE CONTROL OPTIONS.
 # TO OBTAIN BASIC/DEFAULT SMETREE OPTIONS, SIMPLY TPYE THE FOLLOWING:
 
-controlOptions <- semtree.control(method = "naive")
-controlOptions$alpha <- 0.05
+controlOptions <- semtree.control()
+
+# THE CONTENTS OF THE DEFAULT CONTROLS CAN THEN BE VIEWED.
+
+controlOptions
+
+# AND MODEL OPTIONS CAN BE CHANGED BY REDEFINING ELEMENTS OF THE 
+# CONTROL OBJECT.
+
+controlOptions$alpha <- 0.01
+#controlOptions$verbose <- TRUE
 
 # RUN TREE.
 
 tree <- semtree(model=lgcModel, data=lgcm, control = controlOptions)
 
 # RERUN TREE WITH MODEL CONSTRAINTS.
-# MODEL CONSTRAINTS CAN BE ADDED BY IDENTIFYING THE PARAMETERS TO BE
-# CONSTRAINED IN EVERY NODE. ONLY UNCONSTRAINED PARAMETERS ARE THEN
-# TESTED AT EACH NODE FOR GROUP DIFFERENCES. IN THIS EXAMPLE THE MODEL 
-# RESIDUALS ARE CONSTRAINED OVER THE NODES.
 
-constraints <- semtree.constraints(global.invariance = names(omxGetParameters(lgcModel))[1:5])
+constraints <- semtree.constraints(local.invariance = names(omxGetParameters(lgcModel))[1:5])
 
 treeConstrained <- semtree(model=lgcModel, data=lgcm, control = controlOptions,
                            constraints=constraints)
 
-# SEE PLOT.
-# THE PLOT FUNCTION WILL SHOW ALL FREE PARAMETERS AT EACH TERMINAL NODE.
-# THIS CAN CREATE UNREADABLE FIGURES FOR MODELS WITH MANY FREE PARAMETERS.
 
 plot(tree)
-
-summary(tree)
-
-summary(treeConstrained)
-
-print(tree)
-
-parameters(tree)
-
-parameters(tree, leafs.only=FALSE)
-
-treeSub <- subtree(tree, startNode=3)
-
-if (!is.null(treeSub))
-	plot(treeSub)
-
-toTable(tree)
-
-
-controlOptions <- semtree.control(method = "fair")
-
-tree2 <- semtree(lgcModel, lgcm, control=controlOptions)
-
-
-controlOptions <- semtree.control(method = "cv")
-tree3 <- semtree(lgcModel, lgcm, control=controlOptions)

@@ -68,55 +68,9 @@ lgcModel <- mxModel("Linear Growth Curve Model Path Specification",
                     )
 
 
-# TREE CONTROL OPTIONS.
-# TO OBTAIN BASIC/DEFAULT SMETREE OPTIONS, SIMPLY TPYE THE FOLLOWING:
+fr <- semforest(lgcModel, lgcm,control = semforest.control(num.trees = 25))
 
-controlOptions <- semtree.control(method = "naive")
-controlOptions$alpha <- 0.05
-
-# RUN TREE.
-
-tree <- semtree(model=lgcModel, data=lgcm, control = controlOptions)
-
-# RERUN TREE WITH MODEL CONSTRAINTS.
-# MODEL CONSTRAINTS CAN BE ADDED BY IDENTIFYING THE PARAMETERS TO BE
-# CONSTRAINED IN EVERY NODE. ONLY UNCONSTRAINED PARAMETERS ARE THEN
-# TESTED AT EACH NODE FOR GROUP DIFFERENCES. IN THIS EXAMPLE THE MODEL 
-# RESIDUALS ARE CONSTRAINED OVER THE NODES.
-
-constraints <- semtree.constraints(global.invariance = names(omxGetParameters(lgcModel))[1:5])
-
-treeConstrained <- semtree(model=lgcModel, data=lgcm, control = controlOptions,
-                           constraints=constraints)
-
-# SEE PLOT.
-# THE PLOT FUNCTION WILL SHOW ALL FREE PARAMETERS AT EACH TERMINAL NODE.
-# THIS CAN CREATE UNREADABLE FIGURES FOR MODELS WITH MANY FREE PARAMETERS.
-
-plot(tree)
-
-summary(tree)
-
-summary(treeConstrained)
-
-print(tree)
-
-parameters(tree)
-
-parameters(tree, leafs.only=FALSE)
-
-treeSub <- subtree(tree, startNode=3)
-
-if (!is.null(treeSub))
-	plot(treeSub)
-
-toTable(tree)
+vimp <- varimp(fr)
 
 
-controlOptions <- semtree.control(method = "fair")
-
-tree2 <- semtree(lgcModel, lgcm, control=controlOptions)
-
-
-controlOptions <- semtree.control(method = "cv")
-tree3 <- semtree(lgcModel, lgcm, control=controlOptions)
+vimp2 <- varimp(fr, method="permutationInteraction") 

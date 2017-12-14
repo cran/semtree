@@ -8,7 +8,7 @@
 #
 # returns NA if fit fails
 
-fitSubmodels <- function(model, subset1, subset2, control=NULL, invariance=NULL,  return.models=F)
+fitSubmodels <- function(model, subset1, subset2, control, invariance=NULL,  return.models=FALSE)
 {
 	# this is to trick the strict CRAN check
 	group1.objective <- NULL
@@ -72,8 +72,8 @@ fitSubmodels <- function(model, subset1, subset2, control=NULL, invariance=NULL,
       ###               lavaan USED HERE                      ###
       ###########################################################
       if (control$verbose) {message("Evaluating Subset 1")}
-      model1 <- try(suppressWarnings(eval(parse(text=paste(model@Options$model.type,'(parTable(model),data=subset1,missing=\'',model@Options$missing,'\',do.fit=F)',sep="")))),silent=T)
-      #model1 <- try(suppressWarnings(lavaan(parTable(model),data=subset1,model.type=model@Options$model.type,do.fit=FALSE)),silent=TRUE)
+      model1 <- try(suppressWarnings(eval(parse(text=paste(model@Options$model.type,'(lavaan::parTable(model),data=subset1,missing=\'',model@Options$missing,'\',do.fit=F)',sep="")))),silent=T)
+      #model1 <- try(suppressWarnings(lavaan::lavaan(lavaan::parTable(model),data=subset1,model.type=model@Options$model.type,do.fit=FALSE)),silent=TRUE)
       if (class(model1)=="try-error") {
         if(control$verbose){message("try error found 1...")}
         return(NA)
@@ -85,8 +85,8 @@ fitSubmodels <- function(model, subset1, subset2, control=NULL, invariance=NULL,
       LL.sum <- run1$LL
       #other groups are compared to the chosen value and LL stored
       if (control$verbose) {message("Evaluating Subset 2")}
-      model2 <- try(suppressWarnings(eval(parse(text=paste(model@Options$model.type,'(parTable(model),data=subset2,missing=\'',model@Options$missing,'\',do.fit=F)',sep="")))),silent=T)
-      #model2 <- try(suppressWarnings(lavaan(parTable(model),data=subset2,model.type=model@Options$model.type,do.fit=FALSE)),silent=TRUE)
+      model2 <- try(suppressWarnings(eval(parse(text=paste(model@Options$model.type,'(lavaan::parTable(model),data=subset2,missing=\'',model@Options$missing,'\',do.fit=F)',sep="")))),silent=T)
+      #model2 <- try(suppressWarnings(lavaan::lavaan(lavaan::parTable(model),data=subset2,model.type=model@Options$model.type,do.fit=FALSE)),silent=TRUE)
       if (class(model2)=="try-error") {
         if(control$verbose){message("try error found 2...")}
         return(NA)
@@ -110,6 +110,13 @@ fitSubmodels <- function(model, subset1, subset2, control=NULL, invariance=NULL,
 	  
 	} 
 	else {
+	  
+	  #
+	  # invariance testing works as follow:
+	  # build a multigroup model with all parameters unique per-group
+	  # but the parameters given in 'invariance'
+	  
+	  if(inherits(model,"MxModel") || inherits(model,"MxRAMModel")){
 	   ###########################################################
 	   ###               OPENMX USED HERE                      ###
 	   ###########################################################
@@ -173,6 +180,45 @@ fitSubmodels <- function(model, subset1, subset2, control=NULL, invariance=NULL,
 	     return(LL.sum)
 	   }
 	   
-	   return(NA)		
-	 }
-}
+	   #return(NA)	
+	   
+	  } else if (inherits(model,"lavaan")) {
+	    # invariance testing with lavaan
+	    
+	    joinset <- rbind(subset1, subset2)
+	    grp <- c(rep(1,nrow(subset1)),rep(2,nrow(subset2)) )
+	    joinset <- cbind(joinset, grp)
+	    names(joinset)[length(names(joinset))] <- "yc90wr3jdv9234jtt"
+	    
+	    # TODO - change user parameter labels!
+	    jpart <- rbind(lavaan::partable(model),lavaan::partable(model))
+	    pgrp <- c(rep(1,nrow(lavaan::partable(model))),rep(2,nrow(lavaan::partable(model))) )
+	    jpart$group <- pgrp
+	    jpart$block <- pgrp
+	    
+	    fit <- lavaan::sem(jpart, data=joinset, group ="yc90wr3jdv9234jtt" )
+	   
+	    #
+	    # TODO: modify parTable and refit
+	    #
+	    ind <- !(jpart$label %in% invariance) & (jpart$label != "") & (1:length(jpart$label) <= dim(jpart)[1]/2)
+	    jpart$label[ind] <- paste0("yc90wr3jdv9234jtt_",jpart$label[ind])
+	    
+	    modelrun <- try(suppressWarnings(eval(parse(text=paste(model@Options$model.type,'(lavaan::parTable(model),data=data,missing=\'',model@Options$missing,'\')',sep="")))),silent=T)
+	    LL.sum <- -2*lavaan::logLik(modelrun)
+	 #   stop("Not yet implemented!") 
+	    
+	    if (return.models) {
+	     # result <- c()
+	     # result$model1 <- sharedRun$group1
+	     # result$model2 <- sharedRun$group2
+	     # result$LL.sum <- LL.sum
+	      stop("Not implemented for lavaan")
+      #	      return(result)
+	    } else {
+	      return(LL.sum)
+	    }
+	  }
+	   
+	 } # end is.null(invariance)
+} 
