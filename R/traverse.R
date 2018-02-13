@@ -6,10 +6,6 @@ traverse.rec <- function(row, tree)
 	#cat(row,"\n")
 if (tree$caption=="TERMINAL") return(tree$node_id);
 	
-
-#value <- row[tree$rule$variable]
-#cat("Row",paste(row),"\n")
-#cat("Tree rule", tree$rule$name,"\n")
 value <- tryCatch({
  row[[tree$rule$name]]
 },error=function(cond){ message("ERROR! Incomplete dataset!"); stop(); return(NA);})
@@ -39,6 +35,10 @@ if (!log.val)
 
 traverse <- function(tree, dataset)
 {
+  if (!is.null(tree$traverse.fun)) {
+    return(tree$traverse.fun(dataset))
+  }
+  
   if (class(dataset)=="data.frame") {
     result <- rep(NA, dim(dataset)[1])
     for (i in 1:dim(dataset)[1]) {
