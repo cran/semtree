@@ -7,7 +7,7 @@ Author: Andreas M. Brandmaier [aut, cre],
 Maintainer: Andreas M. Brandmaier <andy@brandmaier.de>
 Depends: OpenMx (>= 2.6.9)
 Imports: bitops, sets, digest, rpart, rpart.plot, parallel, plotrix,
-        cluster
+        cluster, stringr
 Suggests: lavaan
 Description: SEM Trees and SEM Forests -- an extension of model-based decision
     trees and forests to Structural Equation Models (SEM). SEM trees hierarchically
@@ -20,10 +20,10 @@ Description: SEM Trees and SEM Forests -- an extension of model-based decision
 License: GPL-3
 Encoding: UTF-8
 LazyLoad: yes
-Version: 0.9.12
-Date: 2018-02-13
+Version: 0.9.13
+Date: 2018-11-04
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2018-02-13 09:07:43 UTC; brandmaier
+Packaged: 2018-11-04 12:23:04 UTC; brandmaier
 Repository: CRAN
-Date/Publication: 2018-02-13 09:48:15 UTC
+Date/Publication: 2018-11-05 09:20:02 UTC

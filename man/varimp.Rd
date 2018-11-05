@@ -13,7 +13,8 @@ a \code{\link{semforest}} object.
 }
 \usage{
 varimp(forest, var.names = NULL, verbose = F,  
-	cluster = NULL, eval.fun = evaluateTree, method = "permutation", ...)
+	cluster = NULL, eval.fun = evaluateTree, method = "permutation", 
+	conditional = FALSE, ...)
 }
 
 
@@ -36,6 +37,8 @@ Default is \code{\link{evaluateTree}} function. The value of the -2LL of the lea
 }
 \item{cluster}{
  An object of class "cluster" representing a parallel socket cluster. See package \link[parallel]{makeCluster}.
+}
+\item{conditional}{ Conditional variable importance. EXPERIMENTAL FEATURE.
 }
 \item{\ldots}{Optional arguments.}
 }

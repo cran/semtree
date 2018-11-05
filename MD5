@@ -1,6 +1,6 @@
-391fa1339691a1d998f3232df89c46a3 *DESCRIPTION
+a49624b747170733563c8777468ea6b9 *DESCRIPTION
 fb084ec6955c7fec261b4bc148c1e0b3 *NAMESPACE
-07ed1dabc5ef98b58cd015b7e63cc61a *NEWS.md
+80a5cea22318feb66436707cb85b5912 *NEWS.md
 5292d48ca214890f8988ab07200e940b *R/SampleColumns.R
 b99158531cdcdead0f2bcf5636a31bfa *R/biodiversity.R
 c5d3ae2fe7fecb510dafaa0fd8021f6a *R/bootstrap.R
@@ -9,6 +9,7 @@ a685053fe5ac2431dd50dc332ac81e75 *R/checkControl.R
 249debc15756be8d09a3a0cdcc8392ef *R/checkModel.R
 5770112aec2b8c6456381b0526bfe8c0 *R/colmap.R
 d4cc3677ef37a0d7dbf3d91cfcb4e4f2 *R/computeOOBWeights.R
+4b6754cbf2c83fe8c8bda1c7171ee0ec *R/conditional.R
 7a7bcd07e276659ac5f1a12bfd2db720 *R/containsHeywoodCases.R
 2e69022e7400bd01476bbd2fd8705529 *R/continue.splitting.R
 cc4051fca3cc1b353cca500b5c501a3e *R/createBinaries.R
@@ -20,9 +21,9 @@ bf5ae4d22d2326bf729acd17a5fdb87c *R/evalForestOob.R
 6f5cd3cbed3ab4f09b1d9761945f0040 *R/evaluateDataLikelihood.R
 3bb87d9a6d91d38b709c46142a214cf7 *R/evaluateTree.R
 aae4722a36212f38b794221023d09a28 *R/evaluateTreeConditional.R
-366dcb38fcff7ee0d3cf9509bc5d785f *R/fairSplit.R
+8424b5a63d5d9692757ebc66b9ec5655 *R/fairSplit.R
 f9b0108ac75c70d68a6be649fd1cc80b *R/findOtherSplits.R
-96401888d518f8f81bd2eef80745e125 *R/fitSubmodels.R
+185458d5aefb15a34091463ea60c74f5 *R/fitSubmodels.R
 86df6fce93855321ca29bc5418eea657 *R/get.children.map.R
 be6f1f8d7ff7c159a807a96743e91a16 *R/getCovariatesFromTree.R
 cf510fd79aa3628152409c9c8eaf00c0 *R/getExpectedCov.R
@@ -55,7 +56,7 @@ c8f26d6741388c3267988c40a2724aeb *R/partialDependenceDataset.R
 fc1d13ce2b8e39860869a8128e064c99 *R/plot.diversityMatrix.R
 ebba522d0e4b63ed886959200a4022be *R/plot.proximity.R
 b8a6a8c9941eccebe472752ee5d3090e *R/plot.semforest.varimp.R
-d7d294010493c083551b33c476630917 *R/plot.semtree.R
+4c63c228b6358cc9d0c57ecd30cb7c9b *R/plot.semtree.R
 8771a970366fd95db7267e25e07486d1 *R/plot.varimpConvergence.R
 81283dd693e26ef2013592e71a3ad83b *R/postprocess.R
 bf085721a6809d03367362c6358b7480 *R/predict_tree.R
@@ -102,7 +103,7 @@ b0d3eb3da927fd2b56145559a714fe1f *R/toLatex.semtree.R
 44001b7142be867bb66caaa804a354cb *R/tree.constraints.R
 71a27ea9d69b3bb5d8795ee27d99a70d *R/treeDivergence.R
 8cf148208d083e3ab657bb06e2af0bc5 *R/varimp-convergence-plot.R
-e85cd0741eac661b0ead937820a5eb09 *R/varimp.R
+c4c33f2a4bb7e784cbfc5b480fd98d7e *R/varimp.R
 51db02048e7d47b2ada090804a188c2c *README.md
 e6c171f2585f0595238aafd4dd039d36 *data/lgcm.rda
 144a29f11c560b9502bdc869ee3185d4 *demo/00Index
@@ -146,7 +147,7 @@ bdec4cb3124c5d06f72cc4ba306530bb *man/semtree.control.Rd
 bbc52e580c90f20f0b14d64be186024b *man/subforest.Rd
 7a0f3e9d67ab44ec59daa65f2ed7a9ff *man/subtree.Rd
 d0de2f0c0e20a145eb623acaca370197 *man/toTable.Rd
-1da839c78a799105a6e8486e2e8f206b *man/varimp.Rd
+b4f02b1fab2c50dac597977fef2697f6 *man/varimp.Rd
 f33025b1c9f22114421a33013afd3144 *tests/invariance.R
 d41a1564f964f665e41372a323a9869e *tests/lavaan.R
 f69caf4fdb043c5ad865a91bfc45692e *tests/tree.R
