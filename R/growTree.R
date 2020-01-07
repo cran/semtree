@@ -16,7 +16,7 @@ growTree <- function(model=NULL, mydata=NULL,
   }
   
   if (control$verbose) {
-    message("Growing level ",depth);
+    message("Growing level ",depth," n=",nrow(mydata));
   }
   
   if (control$report.level>0) {
@@ -31,6 +31,7 @@ growTree <- function(model=NULL, mydata=NULL,
   node$right_child <- NULL
   node$caption <- "TERMINAL"
   node$N <- dim(mydata)[1]
+  class(node) <- "semtree"
   
   # -- sample columns in case of SEM forest usage --
   fulldata <- mydata
@@ -70,7 +71,7 @@ growTree <- function(model=NULL, mydata=NULL,
     #browser()
   }
   
-   if (class(node$model)=="try-error")
+   if (is(node$model,"try-error"))
    {
      message("Model had a run error.")
 	   node$term.reason <-  node$model[[1]]
@@ -154,7 +155,7 @@ growTree <- function(model=NULL, mydata=NULL,
   # determine whether we should skip splitting
   # 1. minimum cases in node
   if (!is.na(control$min.N)) {
-    if (node$N <= 2*control$min.N) {
+    if (node$N <= control$min.N) {
       if(control$verbose){
         message("Minimum user defined N for leaf node.")
       }
@@ -177,6 +178,9 @@ growTree <- function(model=NULL, mydata=NULL,
   result <- NULL
   # 1. unbalanced selection method
   if (control$method == "naive") {
+    
+    if (control$test.type=="ml") {
+    
     result <- tryCatch(
       ################################################
       naiveSplit(model, mydata, control, invariance, meta, constraints=constraints, ...)	
@@ -184,6 +188,24 @@ growTree <- function(model=NULL, mydata=NULL,
       ,
       error = function(e) { cat(paste("Error occured!",e,sep="\n")); return(NULL); }
     );
+    
+    } else if (control$test.type=="score") {
+      
+     # result <- tryCatch(
+        ################################################
+        result <- naiveSplitScoreTest(model, mydata, control, invariance, meta, constraints=constraints, ...)	
+        ################################################
+     #   ,
+     #   error = function(e) { cat(paste("Error occured!",e,sep="\n")); return(NULL); }
+     # );     
+      
+    } else {
+      
+      stop("Unknown Test Type.")
+      
+    }
+    
+    
   } 
   # 2a. split half data to determine best split then use hold out set to compare one split per covariate
   else if (control$method == "fair") {
@@ -255,17 +277,24 @@ growTree <- function(model=NULL, mydata=NULL,
     message("Best LR ",round(node$lr,7)," : ",result$name.max," at covariate column ",
             result$col.max,"\n");
   }
+ 
+  # compute p value
+  if (!is.null(result$p.max)) {
+    node$p <- result$p.max
+  } else {
+    node$p <- pchisq(node$lr,df=node$df, lower.tail=F)
+  }
   
   # ---------	determine whether to continue splitting	--------------
-  if (class(control$custom.stopping.rule)=="function") {
+  if (is(control$custom.stopping.rule,"function")) {
     stopping.rule <- control$custom.stopping.rule
   } else {
     stopping.rule <- stoppingRuleDefault
   }
   # stoppingRuleDefault() is a function that gets inputs node, result, control
   srule <- stopping.rule(node, result, control)
-  # browser()
-  if (class(srule)=="list") {
+  
+  if (is(srule,"list")) {
     node <- srule$node
     cont.split <- !(srule$stop.rule)
   } else {
@@ -331,14 +360,14 @@ growTree <- function(model=NULL, mydata=NULL,
     }
     else if (result$type.max==2){
       # ordered factor splitting of data
-      node$caption <- paste(result$name.max,">=", result$split.max,sep=" ")
+      node$caption <- paste(result$name.max,">=", signif(result$split.max,3),sep=" ")
       node$rule = list(variable=result$col.max, relation=">=", value=c(result$split.max), name = result$name.max)
       sub1 <- subset( mydata, as.numeric(as.character(mydata[, (result$col.max)])) >result$split.max)
       sub2 <- subset( mydata, as.numeric(as.character(mydata[, (result$col.max)]))<=result$split.max)
     }
     else {
       # continuous variables splitting
-      node$caption <- paste(result$name.max,">=", result$split.max,sep=" ")
+      node$caption <- paste(result$name.max,">=", signif(result$split.max,3),sep=" ")
       node$rule = list(variable=result$col.max, relation=">=", value=c(result$split.max), name = result$name.max)
       sub1 <- subset( mydata, as.numeric(mydata[, (result$col.max)]) >result$split.max)
       sub2 <- subset( mydata, as.numeric(mydata[, (result$col.max)])<=result$split.max)

@@ -49,6 +49,8 @@ varimpTree <- function(tree,
       oob.data.permuted[, permutation.idx] <-
         sample(col.data, length(col.data), replace = F)
       } else {
+        stop("Not yet implemented!")
+        
         oob.data.permuted <- conditionalSample(tree, oob.data.permuted, permutation.idx)
         
         if (all(oob.data.permuted == oob.data)) {
@@ -210,7 +212,7 @@ aggregateVarimp <-
            scale = "absolute",
            omit.na = TRUE)
   {
-    if (class(vimp) == "semforest.varimp") {
+    if (is(vimp, "semforest.varimp")) {
       datamat <- vimp$importance
     } else {
       datamat <- vimp

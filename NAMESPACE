@@ -1,19 +1,21 @@
-
 import("OpenMx")
 import("bitops")
 import("rpart")
+importFrom("MASS","mvrnorm")
 importFrom("grDevices", "heat.colors", "rainbow")
 importFrom("graphics", "barplot", "legend", "lines", "pairs", "par",
              "plot", "strwidth", "text")
 importFrom("stats", "as.dist", "cmdscale", "coef", "cor", "cov",
-             "logLik", "median", "pchisq", "qnorm", "runif", "var")
+             "logLik", "median", "pchisq", "qnorm", "runif", "var", "nobs")
 importFrom("stats", "dist", "rnorm")
 importFrom("utils", "flush.console", "getS3method", "sessionInfo","str")
 importFrom("utils", "setTxtProgressBar")
 importFrom("parallel","parLapply","clusterMap")
 importFrom("sets","as.set")
 importFrom("graphics", "hist")
-
+importFrom("methods", "is")
+importFrom("utils", "data")
+importFrom("mvtnorm", "pmvnorm")
 
 export("evaluate")
 S3method("evaluate","semforest")
@@ -72,7 +74,6 @@ S3method("toLatex","semtree")
 importFrom("utils","toLatex")
 
 
-
 export("toTable")
 export("getTerminalNodes")
 
@@ -112,3 +113,16 @@ S3method("plot","partialDependence")
 
 
 #importFrom("utils","toLatex")
+export("getLeafs")
+export("isLeaf")
+export("getDepth")
+S3method("nobs","semtree")
+S3method("coef","semtree")
+S3method("logLik", "semtree")
+S3method("[","semtree")
+S3method("[","semforest")
+
+#export("%+%")
+
+#S3method("plot","contributions")
+#export("contributions")

@@ -1,25 +1,27 @@
-\name{getNumNodes}
-\alias{getNumNodes}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\name{getDepth}
+\alias{getDepth}
 \title{
-Tree Size
+  Get the depth (or, height) a tree.
 }
 \description{
-Counts the number of nodes in a tree.
+  Returns the length of the longest path from a root node to a leaf node.
 }
 \usage{
-getNumNodes(tree)
+  getDepth(tree)
 }
+
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{tree}{
-A SEM tree object.
+    A \code{\link{semtree}} object
+  }
 }
-}
+
 
 \references{
   Brandmaier, A.M., Oertzen, T. v., McArdle, J.J., & Lindenberger, U. (2013). Structural equation model trees. \emph{Psychological Methods}, 18(1), 71-86.
 }
 \author{
-  Andreas M. Brandmaier, John J. Prindle
+  Andreas M. Brandmaier
 }

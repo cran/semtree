@@ -1,10 +1,14 @@
 print.semtree.control <- function(x, ...)
 {
-	stopifnot(class(x)=="semtree.control")
+	stopifnot(is(x, "semtree.control"))
 
 	cat("SEM-Tree control:\n-----------------\n")
 
 	cat("Splitting Method: ", x$method,"\n")
+	cat("Test Type: ", x$test.type,"\n")
+	if(x$test.type == "score"){
+	  cat("Score Tests:  ", "nominal = ", x$score.tests[[1]], ", ordinal = ",
+	      x$score.tests[[2]], ", metric = ", x$score.tests[[3]],"\n", sep = "")}
 	cat("Alpha Level: ", x$alpha,"\n");
 	cat("Bonferroni Correction:", x$bonferroni,"\n")
 	cat("Minimum Number of Cases: ", x$min.N,"\n")

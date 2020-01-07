@@ -40,7 +40,8 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
   # create default control object, if not specified
   if (is.null(control)) {
     control <- semtree.control()
-    message("Default SEMtree settings established since no Controls provided.")
+    if (control$verbose)
+      message("Default SEMtree settings established since no Controls provided.")
   } else {
     if (checkControl(control)!=TRUE) {stop( "Unknown options in semtree.control object!");}
   }
@@ -74,7 +75,8 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
          stop("Focus parameters are only supported with OpenMx!")
        }
       
-       num.match <- length(constraints$focus.parameters %in% OpenMx::omxGetParameters(model))
+       num.match <- length(constraints$focus.parameters %in% 
+                             OpenMx::omxGetParameters(model))
       if (num.match != length(constraints$focus.parameters)) {
         stop("Error! Not all focus parameters are free parameters in the model!")
       }
@@ -200,24 +202,37 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
       message("No Invariance alpha selected. alpha.invariance set to:", control$alpha)
       control$alpha.invariance<-control$alpha}
 	  
-	  if(class(invariance) == "character") {
+	  if(is(invariance, "character")) {
 		  invariance <- list(invariance)
 		  } else {
-			  if (class(invariance) != "list") {
+			  if (!is(invariance, "list")) {
 				  stop("Invariance must contain an array of parameter names or a list of such arrays.")
 			  }
 		  }
   }
+	
+	# check test type
+	testtype.int <- pmatch(control$test.type, c("ml","score"))
+	if (is.na(testtype.int)) {
+	  stop("Unknown test type in control object! Try either 'ml', or 'score'.")
+	}
 	
   # correct method selection check
 	method.int <-  pmatch(control$method, 	c("cv","naive","fair","fair3"))	
 	if (is.na(method.int)) {
 		stop("Unknown method in control object! Try either 'naive', 'fair', 'fair3', or 'cv'.")
 	}	
+	
+	# further checks on test stat
+	if (control$test.type=="dm" & control$method!="naive") {
+	  stop("Only naive splitting is implemented yet for DM test statistic!")
+	}
+	
 	# if this is still null, we have a problem
 	if (is.null(dataset)) {
 	  stop("No data were provided!")
 	}
+	
 	# sanity checks, duplicated col names?
 	if (any(duplicated(names(dataset))))
 	{
@@ -282,6 +297,7 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
 
 	tree$version <- tryCatch(sessionInfo()$otherPkgs$semtree$Version)
 
+	if (control$verbose)
 	message("[x] Tree construction finished!")
 	
 	return(tree)

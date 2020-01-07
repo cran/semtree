@@ -1,25 +1,27 @@
-\name{getNumNodes}
-\alias{getNumNodes}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\name{isLeaf}
+\alias{isLeaf}
 \title{
-Tree Size
+  Test whether a semtree object is a leaf.
 }
 \description{
-Counts the number of nodes in a tree.
+  Tests whether a semtree object is a leaf. Returns TRUE or FALSE.
 }
 \usage{
-getNumNodes(tree)
+  isLeaf(tree)
 }
+
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{tree}{
-A SEM tree object.
+    A \code{\link{semtree}} object
+  }
 }
-}
+
 
 \references{
   Brandmaier, A.M., Oertzen, T. v., McArdle, J.J., & Lindenberger, U. (2013). Structural equation model trees. \emph{Psychological Methods}, 18(1), 71-86.
 }
 \author{
-  Andreas M. Brandmaier, John J. Prindle
+  Andreas M. Brandmaier
 }
