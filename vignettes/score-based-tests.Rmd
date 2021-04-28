@@ -1,0 +1,112 @@
+---
+title: "Score-based Tests"
+author: "Andreas M. Brandmaier"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Score-based Tests}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+## Load data
+
+Load affect dataset from the `psychTools` package. These are data from two studies conducted in the Personality, Motivation and Cognition Laboratory at Northwestern University to  study affect dimensionality and the relationship to various personality dimensions. In the following code, we replace the numeric film labels with the movie titles. Also, we select a subset of predictors including the film, personality dimensions, trait anxiety and affect before having watched the movie.
+
+```{r}
+library(psychTools)
+data(affect)
+
+affect$Film <- factor(affect$Film, ordered = FALSE, 
+                      labels=c("Frontline", "Halloween", "Nat. Geographic","Parenthood"))
+
+
+tree.data <- affect[,c("Film","neur","ext","soc","traitanx","NA1","PA1")] 
+tree.data$DeltaPA <- affect$PA2-affect$PA1
+
+knitr::kable(head(tree.data))
+```
+
+## Create simple model of state anxiety
+
+Here, we create a simple SEM with a single observed variable. No latent variables - only two parameters: mean of `DeltaPA` and variance of `DeltaPA`.
+
+```{r}
+library(OpenMx)
+manifests<-c("DeltaPA")
+latents<-c()
+model <- mxModel("Simple Model", 
+type="RAM",
+manifestVars = manifests,
+latentVars = latents,
+mxPath(from="one",to=manifests, free=c(TRUE), value=c(1.0) , arrows=1, label=c("mu") ),
+mxPath(from=manifests,to=manifests, free=c(TRUE), value=c(1.0) , arrows=2, label=c("sigma2") ),
+mxData(tree.data, type = "raw")
+);
+
+result <- mxRun(model)
+summary(result)
+```
+
+## Score-based Tests
+
+Use score-based tests to create the tree. Use Bonferroni-correction to adjust for multiple testing of predictors.
+
+```{r}
+library(semtree)
+ctrl = semtree.control(
+  method="score", 
+  bonferroni = TRUE)
+```
+
+```{r}
+tree = semtree( model = result, 
+                data = tree.data, 
+                control=ctrl)
+```
+
+Now let us plot the tree.
+
+```{r out.width="75%",dpi=300}
+plot(tree)
+```
+
+Implied mixture model:
+
+```{r dpi=300, out.width="100%"}
+tndata <- semtree::getTerminalNodes(tree)
+
+cols <- viridis::plasma(nrow(tndata))
+
+pl <- ggplot2::ggplot(data = data.frame(x = c(-20, 20)), ggplot2::aes(x))+
+  ggplot2::xlab("Change in Positive Affect")
+for (i in 1:nrow(tndata)) {
+  pl <- pl + ggplot2::stat_function(fun = dnorm, 
+      n = 101, col=cols[i], args = list(mean = tndata[i,2], 
+                                        sd = sqrt(tndata[i,1])))
+}
+
+plot(pl)
+```
+
+Let's inspect the group with the largest negative change:
+
+```{r dpi=300, out.width="100%"}
+i <- which.min(tndata$mu)
+
+pl <- pl +ggplot2::geom_area(stat = "function", 
+                             fun = function(x){dnorm(x,mean=tndata[i,2],sd=sqrt(tndata[i,1]))}, 
+                             fill = cols[i])+
+      ggplot2::geom_label(x=-10,y=.12, label="People with very high positive \naffect, which then watched\n a war film")
+
+plot(pl)
+```

@@ -25,13 +25,13 @@ naiveSplit <- function(model=NULL, mydata=NULL, control=NULL, invariance=NULL, m
 	###               lavaan USED HERE                      ###
 	###########################################################
 	if(control$sem.prog == 'lavaan'){
-	  if (control$verbose) {message("Assessing overall model")}
+	  #if (control$verbose) {message("Assessing overall model")}
 	  modelnew <- eval(parse(text=paste(model@Options$model.type,'(parTable(model),data=mydata,missing=\'',model@Options$missing,'\',do.fit=F)',sep="")))
 	  #modelnew <- lavaan(parTable(model),data=mydata,model.type=model@Options$model.type,do.fit=FALSE)
 	  LL.overall <- safeRunAndEvaluate(modelnew) 
 	  suppressWarnings(if (is.na(LL.overall)) return(NULL))
 	}
-  firstCol <- 1
+  #firstCol <- 1
 	#for(c in (mvars+1):ncol(mydata)) {
   if(pp) {comparedData <- max(meta$model.ids+1)}
   else {comparedData <- meta$covariate.ids}
@@ -48,7 +48,10 @@ naiveSplit <- function(model=NULL, mydata=NULL, control=NULL, invariance=NULL, m
 	    
 	  
 	  # tell the user a little bit about where we are right now
-	  if (control$verbose){message("Testing Covariate: ",cur_col,"/",ncol(mydata), " (",colnames(mydata)[cur_col],")" )}
+	  if (control$verbose){
+	    ui_message("Testing Predictor: ",
+	            colnames(mydata)[cur_col])
+	 }
     ############################################################
 	  #case for factored covariates##############################
 	  if(is.factor(mydata[,cur_col])) {
@@ -153,9 +156,9 @@ naiveSplit <- function(model=NULL, mydata=NULL, control=NULL, invariance=NULL, m
 	    var.type = 2
 	    v <- as.numeric(mydata[,cur_col])
 	    val.sets <- sort(union(v,v))
-	    if(length(val.sets) < 30|!isTRUE(control$shortcut)){
+	
 	      if(length(val.sets) > 1) {
-          #browser()
+      
 	        for(i in 2:(length(val.sets))) {
 	          LL.temp <- c()
 	          #subset data for chosen value and store LL
@@ -188,19 +191,8 @@ naiveSplit <- function(model=NULL, mydata=NULL, control=NULL, invariance=NULL, m
             #browser()
 	        }
 	      }
-	    }
-	  }
 
-	  #store the LL, split value and variable number for each cov that makes a possible split	
-	  if (control$verbose) {
-	    if(!is.null(LL.within)){
-        if(firstCol==n.comp){message("Within Covariates LLs: ",paste(round(LL.within[firstCol],2),collapse=" "))}
-        else if(firstCol<n.comp){message("Within Covariates LLs: ",paste(round(LL.within[firstCol:n.comp],2),collapse=" "))}
-        else{message("Within LLs NULL")}
-	    }
-	    else{message("Within LLs NULL")}
 	  }
-    if(n.comp>0){firstCol <- n.comp+1}
 	}
 
 	if(is.null(LL.within)) {return(NULL)}
@@ -212,7 +204,7 @@ naiveSplit <- function(model=NULL, mydata=NULL, control=NULL, invariance=NULL, m
   filter <- c()
   if(!is.null(invariance)){ 
     if (control$verbose){
-      message("Filtering possible splits by invariance")
+      ui_message("Filtering possible splits by invariance")
     }
     filter <- invarianceFilter(model,mydata,btn.matrix,LL.baseline,invariance,control)
   }  
@@ -260,6 +252,14 @@ naiveSplit <- function(model=NULL, mydata=NULL, control=NULL, invariance=NULL, m
       }
     }
 	}
+	
+	# alternative way of counting the number of comparisons
+	# count the number of variables instead of tests
+	if (control$naive.bonferroni.type==1) {
+	  n.comp <- length(comparedData)
+	}
+	
+	
   if(is.na(LL.max)){return(NULL)}
   else(
     return(list(LL.max=LL.max,split.max=split.max,name.max=name.max,

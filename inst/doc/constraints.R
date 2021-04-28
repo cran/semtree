@@ -28,7 +28,7 @@ observed[,3]<-observed[,3]+p2*0.5*lat
 cfa.sim <- data.frame(observed,p1,p2)
 names(cfa.sim)[1:4] <- paste0("x",1:4)
 
-## ----cfadefinition, dependson="difsim", echo=TRUE-----------------------------
+## ----cfadefinition, echo=TRUE-------------------------------------------------
 require("OpenMx");
 manifests<-c("x1","x2","x3","x4")
 latents<-c("F")
@@ -116,7 +116,11 @@ tree.biv <- semtree(model.biv, data=df.biv)
 
 
 ## -----------------------------------------------------------------------------
-plot(tree.biv)
+# default white color for all nodes
+cols <- rep("black", semtree:::getNumNodes(tree.biv))
+cols[as.numeric(row.names(semtree:::getTerminalNodes(tree.biv)))] <- viridis:::viridis_pal()(4)
+
+plot(tree.biv, border.col=cols)
 
 ## ----warning=FALSE, message=FALSE---------------------------------------------
 require("ggplot2")
@@ -129,6 +133,7 @@ df.biv.pred <- data.frame(df.biv,
   leaf=factor(getLeafs(tree=tree.biv, data = df.biv)))
 ggplot(data = df.biv.pred, aes(x=x1, y=x2))+ 
   geom_density_2d(aes(colour=leaf))+ 
+  viridis::scale_color_viridis(discrete=TRUE)+
   theme_classic()
 
 ## -----------------------------------------------------------------------------

@@ -1,4 +1,5 @@
-checkControl <- function(control, fail=T){
+checkControl <- function(control, fail=TRUE){
+   
   if(inherits(control,"semtree.control")){
     fail <- check.semtree.control(control)
   }
@@ -8,9 +9,8 @@ checkControl <- function(control, fail=T){
   return(fail)
 }
 
-check.semtree.control <- function(control, fail=T)
+check.semtree.control <- function(control, fail=TRUE)
 {
- # message("TREE")
  attr <- attributes(control)$names
  def.attr <- attributes(semtree.control())$names
  if ((length(intersect(attr, def.attr)) != length(attr)))
@@ -18,14 +18,29 @@ check.semtree.control <- function(control, fail=T)
    unknown <- setdiff(attr, def.attr)
    msg <- paste("Control object contains unknown parameters:",unknown)
    if (fail) {
-     stop(msg)
+     ui_fail(msg)
+     stop()
    } else {
-     warning(msg);
+     ui_warn(msg);
      return(FALSE);
    }
  } else {
+   
+   temp <- semtree.control()
+   for ( nms in attributes(temp)$names) {
+     val <- control[[nms]]
+     if (!all(is.na(val)) && !all(is.na(temp[[nms]]))) {
+       if (!(class(val)==class(temp[[nms]]))) {
+         warning(paste0("Possibly wrong class for semtree_control option ",nms))
+       }
+     }
+   } # end for
+   
+   
    return (TRUE);
  }
+ 
+ 
  
  return (length(intersect(attr, def.attr)) == length(attr));
 }
@@ -41,9 +56,10 @@ check.semforest.control <- function(control, fail=T)
    unknown <- setdiff(attr, def.attr)
    msg <- paste("Control object contains unknown parameters:",unknown)
    if (fail) {
-     stop(msg)
+     ui_fail(msg)
+      stop()
    } else {
-     warning(msg);
+     ui_warn(msg);
      return(FALSE);
    }
  } else {
