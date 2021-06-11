@@ -70,7 +70,11 @@ print(control)
 Now, run the forest using the `control` object:
 
 ```{r}
-forest <- semforest( model=model, data = affect, control = control )
+forest <- semforest( model=model,
+                     data = affect, 
+                     control = control,
+                     covariates = c("Study","Film", "state1",
+                                    "PA2","NA2","TA2","BDI"))
 ```
 
 ## Variable importance

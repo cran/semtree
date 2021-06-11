@@ -6,6 +6,8 @@ knitr::opts_chunk$set(
   out.width="50%"
 )
 
+
+
 library(ggplot2)
 
 ## -----------------------------------------------------------------------------
@@ -57,6 +59,13 @@ fp <- "mu2" # predicted by grp2
 tree.biv <- semtree(model.biv, data=df.biv, constraints = list(focus.parameters=fp))
 
 plot(tree.biv)
+
+
+## -----------------------------------------------------------------------------
+fp <- "mu2" # predicted by grp2
+forest <- semforest(model.biv, data=df.biv,
+                    constraints = list(focus.parameters=fp),
+                    control=semforest.control(num.trees=10, control=semtree.control(method="score",alpha=1)))
 
 
 ## -----------------------------------------------------------------------------

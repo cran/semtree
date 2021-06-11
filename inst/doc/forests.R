@@ -38,7 +38,11 @@ control <- semforest.control(num.trees = 5)
 print(control)
 
 ## -----------------------------------------------------------------------------
-forest <- semforest( model=model, data = affect, control = control )
+forest <- semforest( model=model,
+                     data = affect, 
+                     control = control,
+                     covariates = c("Study","Film", "state1",
+                                    "PA2","NA2","TA2","BDI"))
 
 ## -----------------------------------------------------------------------------
 vim <- varimp(forest)

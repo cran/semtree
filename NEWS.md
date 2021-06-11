@@ -1,3 +1,9 @@
+# semtree 0.9.16 (ongoing)
+
+- removed all code based on parallel-package and replace by future-equivalent. Thanks to Michael Krause!
+- restored semtree.print() generic function that was accidentally dropped in 0.9.15
+- fix to score-based tests to support definition variables in OpenMx. Thanks to Manuel Arnold!
+
 # semtree 0.9.15 (2021)
 
 - roll-out of score-based tests - use method "score" to enable 
