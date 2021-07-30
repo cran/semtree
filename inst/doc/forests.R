@@ -19,12 +19,14 @@ affect$imp <- as.ordered(affect$imp)
 library(OpenMx)
 manifests<-c("state2")
 latents<-c()
-model <- mxModel("Simple Model", 
+model <- mxModel("Univariate Normal Model", 
 type="RAM",
 manifestVars = manifests,
 latentVars = latents,
-mxPath(from="one",to=manifests, free=c(TRUE), value=c(1.0) , arrows=1, label=c("mu") ),
-mxPath(from=manifests,to=manifests, free=c(TRUE), value=c(1.0) , arrows=2, label=c("sigma2") ),
+mxPath(from="one",to=manifests, free=c(TRUE), 
+       value=c(50.0) , arrows=1, label=c("mu") ),
+mxPath(from=manifests,to=manifests, free=c(TRUE), 
+       value=c(100.0) , arrows=2, label=c("sigma2") ),
 mxData(affect, type = "raw")
 );
 
@@ -42,7 +44,7 @@ forest <- semforest( model=model,
                      data = affect, 
                      control = control,
                      covariates = c("Study","Film", "state1",
-                                    "PA2","NA2","TA2","BDI"))
+                                    "PA2","NA2","TA2"))
 
 ## -----------------------------------------------------------------------------
 vim <- varimp(forest)

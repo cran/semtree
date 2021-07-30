@@ -24,11 +24,11 @@ Description: SEM Trees and SEM Forests -- an extension of model-based decision
 License: GPL-3
 Encoding: UTF-8
 LazyLoad: yes
-Version: 0.9.16
-Date: 2021-06-10
+Version: 0.9.17
+Date: 2021-07-27
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-06-11 12:04:53 UTC; brandmaier
+Packaged: 2021-07-29 17:27:37 UTC; brandmaier
 Repository: CRAN
-Date/Publication: 2021-06-11 14:30:01 UTC
+Date/Publication: 2021-07-30 08:10:02 UTC
