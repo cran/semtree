@@ -1,7 +1,16 @@
 #################################################
 # Tree Growing Process                         ##
 #################################################
-
+#
+# growTree implements the basic recursive splitting logic
+# and creates the tree data structure including all sorts
+# of model- and meta-information. The actual evaluation
+# of the best splits is outsourced to separate functions
+# depending on what split method is chosen.
+#
+#
+#
+#
 growTree <- function(model=NULL, mydata=NULL,
                      control=NULL, invariance=NULL, meta=NULL,
                      edgelabel=NULL, depth=0, constraints=NULL, ...)
@@ -198,21 +207,11 @@ growTree <- function(model=NULL, mydata=NULL,
     
   } else if (control$method=="score") {
     
-    # result <- tryCatch(
-    ################################################
+
 
     
     result <- naiveSplitScoreTest(model, mydata, control, invariance, meta, constraints=constraints, ...)	
-    ################################################
-    #   ,
-    #   error = function(e) { cat(paste("Error occured!",e,sep="\n")); return(NULL); }
-    # );     
-    
-    # } else {
-    
-    #    stop("Unknown Test Type.")
-    
-    #  }
+
     
     
   } 
@@ -240,14 +239,7 @@ growTree <- function(model=NULL, mydata=NULL,
   }
   # 3. Traditional cross validation for covariate split selection
   else if (control$method == "cv") {
-    result <- tryCatch(
-      ################################################
-      crossvalidatedSplit(model, mydata, control, invariance, meta, constraints=constraints, ...)
-      ################################################
-      ,
-      error = function(e) { cat(paste("Error occured!",e,sep="\n")); return(NULL); }
-    );		
-    node$p.values.valid <- FALSE	
+    stop("This split selection procedure is not supported anymore. Please see the new score-based tests for split selection.")
   } else {
     ui_fail("Error. Unknown split method selected")
     stop()
@@ -344,7 +336,7 @@ growTree <- function(model=NULL, mydata=NULL,
   if (control$mtry > 0) {
     
     # also need to remap col.max to original data!
-    if (!is.null(result$col.max)) {
+    if (!is.null(result$col.max) && !is.na(result$col.max)) {
       col.max.name <- names(mydata)[result$col.max]
       result$col.max <- which(names(fulldata)==col.max.name)
     } else {
@@ -361,14 +353,16 @@ growTree <- function(model=NULL, mydata=NULL,
       report("Stop splitting based on stopping rule.", 1)
     }
     
+
+    
     # store the split name (covariate name and split value) RHS is yes branch
-    if(result$type.max==1) {
+    if(result$type.max==.SCALE_CATEGORICAL) {
       # unordered factor collating and splitting
       lvl <- (control$method == "fair")
       result1 <- recodeAllSubsets(mydata[,result$col.max],colnames(mydata)[result$col.max],
                                   growbool=T, use.levels=lvl)
       
-      
+
       test2 <- rep(NA, nrow(mydata))
       if(!is.na(result1$num_sets) & !is.null(result1$num_sets)){
         for(j in 1:result1$num_sets) {
@@ -384,10 +378,23 @@ growTree <- function(model=NULL, mydata=NULL,
       }
       test2 <- test2[,-1]
       
+      # if var.type==1, then split.max corresponds to the index of
+      # the best column in the matrix that represents all subsets
+      # make sure that this is not casted to a string if there
+      # are predictors of other types (esp., factors)
+     # browser()
+      result$split.max <- as.integer(result$split.max)
+
+      #named <- colnames(result1$columns)[result$split.max]
+#      node$caption <- paste(colnames(result1$columns)[result$split.max])
+      best_subset_col_id = result$split.max
+      best_values = result1$expressions[ (best_subset_col_id-1)*3 +1]$value
       
-      named <- colnames(result1$columns)[result$split.max]
-      node$caption <- paste(colnames(result1$columns)[result$split.max])
-      node$rule = list(variable=result$col.max, relation="%in%", value=c(result1$values), name = result$name.max)
+      node$rule = list(variable=result$col.max, relation="%in%", 
+                       value=best_values, 
+                       name = result$name.max)
+      node$caption <- paste(result$name.max, " in [", paste0(best_values,
+                                                           collapse=" ")," ]")
       
       if(result1$num_sets==1) {
         sub1 <- subset (mydata, as.numeric(test2) == 2)
@@ -399,24 +406,41 @@ growTree <- function(model=NULL, mydata=NULL,
       }
       
     }
-    else if (result$type.max==2){
+    else if (result$type.max==.SCALE_METRIC){
+      
+      # if var.type==2, then split.max corresponds to the split point value
+      # make sure that this is not casted to a string if there
+      # are predictors of other types (esp., factors)
+      result$split.max <- as.numeric(result$split.max)
+      
       # ordered factor splitting of data
-      node$caption <- paste(result$name.max,">=", signif(result$split.max,3),sep=" ")
+      node$caption <- paste(result$name.max,">=", signif(result$split.max,6),sep=" ")
       node$rule = list(variable=result$col.max, relation=">=", value=c(result$split.max), name = result$name.max)
       sub1 <- subset( mydata, as.numeric(as.character(mydata[, (result$col.max)])) >result$split.max)
       sub2 <- subset( mydata, as.numeric(as.character(mydata[, (result$col.max)]))<=result$split.max)
+    } 
+    else if (result$type.max==.SCALE_ORDINAL) {
+
+      node$caption <- paste(result$name.max,">", result$split.max,sep=" ")
+      node$rule = list(variable=result$col.max, relation=">", value=c(result$split.max), name = result$name.max)
+      sub1 <- subset( mydata, mydata[, (result$col.max)] >result$split.max)
+      sub2 <- subset( mydata, mydata[, (result$col.max)]<=result$split.max)
+      
     }
     else if (result$type.max == 99) {
       # this is an error code by score test implementation
       # return node and stop splitting
+      # TODO (MA): Do we need to issue a warning?
       return(node)
     }
     else  {
+      # TODO: remove this bc this condition should be captured earlier in any case
       # continuous variables splitting
-      node$caption <- paste(result$name.max,">=", signif(result$split.max,3),sep=" ")
-      node$rule = list(variable=result$col.max, relation=">=", value=c(result$split.max), name = result$name.max)
-      sub1 <- subset( mydata, as.numeric(mydata[, (result$col.max)]) >result$split.max)
-      sub2 <- subset( mydata, as.numeric(mydata[, (result$col.max)])<=result$split.max)
+      #node$caption <- paste(result$name.max,">=", signif(result$split.max,3),sep=" ")
+      #node$rule = list(variable=result$col.max, relation=">=", value=c(result$split.max), name = result$name.max)
+      #sub1 <- subset( mydata, as.numeric(mydata[, (result$col.max)]) >result$split.max)
+      #sub2 <- subset( mydata, as.numeric(mydata[, (result$col.max)])<=result$split.max)
+      stop("An error occured!")
     }
     
     ##########################################################
@@ -443,6 +467,7 @@ growTree <- function(model=NULL, mydata=NULL,
         data = temp,
         formula = as.formula(paste0(result$name.max,"~.")))
     }
+    
     
     # recursively continue splitting
     # result1 - RHS; result2 - LHS

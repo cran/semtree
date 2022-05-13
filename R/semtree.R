@@ -92,10 +92,10 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
   # obtain dots arguments and test for deprecated use of arguments
   arguments <- list(...)
   if ("global.constraints" %in% names(arguments)) {
-    stop("Deprecated use of 'global.constraints'. Please use constraints object")
+    stop("Deprecated use of argument 'global.constraints'. Please use constraints object")
   }
   if ("invariance" %in% names(arguments)) {
-    stop("Deprecated use of 'invariance'. Please use constraints object with property 'local.invariance'")
+    stop("Deprecated use of argument 'invariance'. Please use constraints object with property 'local.invariance'")
   }
   
   if (is.null(constraints)) {
@@ -110,7 +110,7 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
       #report(paste("Setting arguments to ",paste(arguments$covariates)),1)
       covariates <- arguments$covariates
     } else {
-      stop("Cannot have predictors and covariates in SEM Tree model.")
+      stop("Cannot have both arguments 'predictors' and 'covariates' in SEM Tree model.")
     }
   }
   
@@ -131,7 +131,17 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
   }
   
   if (control$method=="cv") {
-    warning("*****************\n* The use of method 'cv' is deprecated and discouraged\n***************+")
+    ui_stop("This method ceased to exist. Please see modern score-based tests.")
+  }
+  
+  # check whether data is complete for score-tests
+  # this probably should be a more fine-grained check some day
+  # that tests only model variables and selected predictors
+  if (control$method == "score") {
+    check_complete = all(stats::complete.cases(data))
+    if (!check_complete)
+      ui_stop("If score tests are used, data must not contain N/A in either the
+           predictors or model variables.")
   }
   
   # check for correct model entry
@@ -222,6 +232,28 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
       model.ids <- simplify2array( as.vector(modid, mode="integer") )
     }
     
+    # check whether character columns are given as predictors
+    for (i in covariate.ids) {
+      if (!is.factor(dataset[,i]) && !is.numeric(dataset[,i])) {
+        # this column is neither numeric or a factor, thus cannot be handled
+        # probably a vector of strings
+        ui_stop("Predictor '", colnames(dataset)[i],"' is neither a factor nor numeric. This is likely causing trouble. Please remove or specify as factor or ordered.")
+      }
+    }
+    
+    # check whether numeric covariates have more than 9 observed values
+    # if score-tests are used, otherwise score statistics can become
+    # unstable
+    if (control$method=="score") {
+    for (i in covariate.ids) {
+      if (!is.factor(dataset[,i]) && is.numeric(dataset[,i])) {
+        # this column is numeric, should have more than 9 unique values!
+        check_9levels = length(unique(dataset[,i]))>9
+        if (!check_9levels)
+          ui_warn("Predictor '", colnames(dataset)[i],"' has 9 or fewer unique values. Consider coding as ordinal to avoid instability with score-based tests.")
+      }
+    }
+    }
  
     # for score tests, model needs to run once
     if (control$sem.prog == 'OpenMx' && control$method == "score") {
@@ -240,6 +272,8 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
                    list(scores_info = OpenMx_scores_input(x = model,
                                                           control = control)))
     } 
+    
+
     
   }
   

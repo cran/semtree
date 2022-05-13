@@ -82,19 +82,21 @@ naiveSplitScoreTest <- function(model = NULL, mydata = NULL, control = NULL,
       if (!is.factor(covariate_sorted)) {
         level <- "metric"
         test <- control$score.tests["metric"][[1]]  # default: supLM
-        cur.type <- 2
+        cur.type <- .SCALE_METRIC
       } else {
         cov_levels <- nlevels(x = covariate_sorted)
         if (is.ordered(covariate_sorted)) {
           level <- "ordinal"
           test <- control$score.tests["ordinal"][[1]] # default: "maxLMo"
-          cur.type <- 2
+          cur.type <- .SCALE_ORDINAL
         } else {
           level <- "nominal"
           test <- control$score.tests["nominal"][[1]] # default: "LM" 
-          cur.type <- 1
+          cur.type <- .SCALE_CATEGORICAL
         }
       }
+      
+    
       
       # get test statstic object
       functional <- switch(test, dm = strucchange::maxBB,
@@ -122,7 +124,8 @@ naiveSplitScoreTest <- function(model = NULL, mydata = NULL, control = NULL,
         
         
         # check if cutpoint is too close to the border
-        if (!(cur.type == 1 & nlevels(covariate_sorted) > 2)) { # do not use with categorical covariates with more than two levels
+        if (!(cur.type == .SCALE_CATEGORICAL & nlevels(covariate_sorted) > 2))
+          { # do not use with categorical covariates with more than two levels
           test.result <- checkBinSize(test.result = test.result,
                                       control = control,
                                       level = level,
@@ -138,6 +141,8 @@ naiveSplitScoreTest <- function(model = NULL, mydata = NULL, control = NULL,
       } else {
         test.result$cutpoint <- NA
       }
+      
+
       
       # Standardise output
       ts <- test.result$statistic
@@ -168,13 +173,14 @@ naiveSplitScoreTest <- function(model = NULL, mydata = NULL, control = NULL,
     }
   }
   
+  
   #######################
   # main loop ends here #
   #######################
   
   # Call naiveSplit to get cutpoints for categorical covariates with more than two levels
   if (p.max < 1) {
-    if (type.max == 1 & nlevels(mydata[, col.max]) > 2) {
+    if (type.max == .SCALE_CATEGORICAL & nlevels(mydata[, col.max]) > 2) {
       if (control$sem.prog == 'OpenMx') {
         mydata <- mydata[, c(fit$manifestVars, name.max)]
       }
@@ -188,6 +194,13 @@ naiveSplitScoreTest <- function(model = NULL, mydata = NULL, control = NULL,
       split.max <- test.results$split.max
       btn.matrix <- test.results$btn.matrix
     }
+  }
+  
+
+  if ((is.null(split.max)) || (is.na(split.max))) {
+    if (control$report.level >= 50) cat("Split.max is null or NA!\n")
+    p.max=1 
+    LL.max=0 
   }
   
   n.comp <- length(cmp.column.ids)
