@@ -1,3 +1,13 @@
+# semtree 0.9.19 (2023)
+
+- changed default behavior of print function of varimp, such that na.omit=TRUE, which is consistent with other packages like party or partykit
+- fixed issues with toTable()-command, by default, all parameters are shown now, also fixed a bug with score-based tests and toTable()
+- fixed problem with focus-parameters and variable importance
+- bugfix in score-based tests that sometimes did not respect min.N constraints
+- new functionality for parameter contribution evaluation
+- more verbose vignettes
+- removed dependency on set, plotrix and digest package to make package imports leaner
+
 # semtree 0.9.18 (2022)
 
 - happily welcoming Caspar van Lissa to the developer team
@@ -55,6 +65,6 @@
 - deprecated partialDependencePlot and introduced partialDependence() function with S3 plotting method
 - added parallel computation option to partialDependence
 - added new demo scripts
-- added extra.legend paramter to varimpConvergencePlot
+- added extra.legend parameter to varimpConvergencePlot
 - bugfix in traverse() that led to underestimations of variable importance in some cases
 - added error message when trying to use lavaan and global constraints

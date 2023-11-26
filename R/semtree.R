@@ -182,9 +182,22 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
   ###########################################################
   if((control$sem.prog=='OpenMx') || (control$sem.prog=='ctsem')){
     
-    if ((control$sem.prog=='ctsem')) mxmodel <- model$mxobj
-    else
+    if ((control$sem.prog=='ctsem')) {
+      ## 11.08.2022: check data format. Currently, only wide format is supported.
+      if (all(is.na(match(paste0(model$ctmodelobj$manifestNames, "_T0"),
+                          colnames(dataset))))) {                                                                               
+        stop("Long format data detected. Data need to be in wide format.")
+        # Check if the model unsupported components
+        # to be done
+      }    
+      
+      model$mxobj@manifestVars <- paste0(model$ctmodelobj$manifestNames, "_T", 
+                                         rep(0:(model$ctmodelobj$Tpoints - 1),
+                                             each = model$ctmodelobj$n.manifest))
+      mxmodel <- model$mxobj
+    } else {
       mxmodel <- model
+    }
     
     if(is.null(dataset)) {
       if (is.null(mxmodel@data)) {
@@ -201,36 +214,9 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
         ))
     }
     
-    # specify covariates from model columns
-    if (is.null(covariates)) {    
-      model.ids <- rep(NA, length(mxmodel@manifestVars))
-      # find the ids in dataset
-      for (i in 1:length(model.ids)) {
-        cmp <- mxmodel@manifestVars[i] == names(dataset)
-        if (all(!cmp)) {
-          ui_stop("Error. Variable ",mxmodel@manifestVars[i], " missing in data set!")
-        }
-        model.ids[i] <- which(cmp);
-      }
-      all.ids <- 1:length(names(dataset))
-      cvid <- sets::as.set(all.ids)-sets::as.set(model.ids) 
-      if (length(cvid)==0) {
-        ui_stop("Error. No predictors contained in dataset!")
-      }
-      covariate.ids <- simplify2array( as.vector(cvid,mode="integer") )
-    }
-    # resort columns to organize covariates
-    else {
-      all.ids <- 1:length(names(dataset))
-      covariate.ids <- sapply(covariates, function(cv) { which(cv==names(dataset))} )
-      
-      modid <- sets::as.set(all.ids)-sets::as.set(covariate.ids) 
-      if (length(modid)==0) {
-        ui_stop("No covariates contained in dataset!")
-      }
-      
-      model.ids <- simplify2array( as.vector(modid, mode="integer") )
-    }
+    tmp <- getPredictorsOpenMx(mxmodel, dataset, covariates)
+    model.ids <- tmp[[1]]
+    covariate.ids <- tmp[[2]]
     
     # check whether character columns are given as predictors
     for (i in covariate.ids) {
@@ -255,19 +241,18 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
     }
     }
  
-    # for score tests, model needs to run once
-    if (control$sem.prog == 'OpenMx' && control$method == "score") {
-      if (!summary(model)$wasRun) {
+    # 15.08.2022: all OpenMx models are estimated here if not already estimated
+    ## ctsem are already estimated once
+    if (control$sem.prog == 'OpenMx' && !summary(model)$wasRun) {
         ui_message("Model was not run. Estimating parameters now.")
-        model <- OpenMx::mxTryHard(model)
-      }
+        suppressMessages(model <- OpenMx::mxTryHard(model = model, paste=FALSE, silent = TRUE))
     }
     
     
     # Prepare objects for fast score calculation
     ## Only for linear models (semtree$linear == TRUE) or for models with definition variables 
     # Note: model must be run - this is assured by previous code block that performs mxTryHard()
-    if (control$method == "score") {
+    if (control$method == "score" & control$sem.prog == 'OpenMx') {
       control <- c(control,
                    list(scores_info = OpenMx_scores_input(x = model,
                                                           control = control)))
@@ -284,36 +269,10 @@ semtree <- function(model, data=NULL, control=NULL, constraints=NULL,
     if(is.null(dataset)) {
       ui_stop("Must include data for analysis!")
     }
-    # specify covariates from model columns
-    if (is.null(covariates)) {    
-      model.ids <- rep(NA, length(model@Data@ov.names[[1]]))
-      for (i in 1:length(model.ids)) {
-        model.ids[i] <- which(model@Data@ov.names[[1]][i] == names(dataset));
-      }
-      all.ids <- 1:length(names(dataset))
-      cvid <- sets::as.set(all.ids)-sets::as.set(model.ids) 
-      if (length(cvid)==0) {
-        ui_stop("No covariates contained in dataset!")
-      }
-      covariate.ids <- simplify2array( as.vector(cvid,mode="integer") )
-    }
-    # resort columns to organize covariates
-    else {
-      all.ids <- 1:length(names(dataset))
-      covariate.ids <- sapply(covariates, function(cv) { which(cv==names(dataset))} )
-      
-      modid <- sets::as.set(all.ids)-sets::as.set(covariate.ids) 
-      if (length(modid)==0) {
-        ui_stop("No covariates available to split on!")
-      }
-      
-      model.ids <- simplify2array( as.vector(modid,mode="integer") )
-    }
-    
-    #if (control$verbose) {
-      #message("MODEL IDS ",paste(model.ids))
-    #  message("COV IDS ",paste(covariate.ids))
-    #}
+ 
+    tmp <- getPredictorsLavaan(model, dataset, covariates)
+    model.ids <- tmp[[1]]
+    covariate.ids <- tmp[[2]]
     
   }
   

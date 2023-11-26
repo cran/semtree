@@ -39,7 +39,7 @@ ctrl = semtree.control(
   method="score", 
   bonferroni = TRUE)
 
-## -----------------------------------------------------------------------------
+## ----message=FALSE, warning=FALSE, results="hide"-----------------------------
 tree = semtree( model = result, 
                 data = tree.data, 
                 control=ctrl)
@@ -54,10 +54,10 @@ cols <- viridis::plasma(nrow(tndata))
 
 pl <- ggplot2::ggplot(data = data.frame(x = c(-20, 20)), ggplot2::aes(x))+
   ggplot2::xlab("Change in Positive Affect")
+
 for (i in 1:nrow(tndata)) {
   pl <- pl + ggplot2::stat_function(fun = dnorm, 
-      n = 101, col=cols[i], args = list(mean = tndata[i,2], 
-                                        sd = sqrt(tndata[i,1])))
+      n = 101, col=cols[i], args = list(mean = tndata[i,2], sd = sqrt(tndata[i,1])))
 }
 
 plot(pl)

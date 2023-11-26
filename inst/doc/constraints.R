@@ -8,7 +8,7 @@ knitr::opts_chunk$set(
 library(semtree)
 library(MASS)
 
-## ----eval=FALSE---------------------------------------------------------------
+## ----eval=FALSE, message=FALSE, warning=FALSE, results="hide"-----------------
 #  library(semtree)
 #  
 #  cnst <- semtree.constraints(local.invariance=NULL,
@@ -19,14 +19,18 @@ library(MASS)
 
 ## ----difsim-------------------------------------------------------------------
 N <- 2000
-p1 <- sample(size=N, x=c(0,1), replace=TRUE)
-p2 <- sample(size=N, x=c(0,1), replace=TRUE)
-lat <- rnorm(N,mean = 0+p1)
-loadings <- c(.5,.8,.7,.9)
-observed <- lat %*% t(loadings) + rnorm(N*length(loadings),sd = .1)
-observed[,3]<-observed[,3]+p2*0.5*lat
-cfa.sim <- data.frame(observed,p1,p2)
-names(cfa.sim)[1:4] <- paste0("x",1:4)
+p1 <- sample(size = N,
+             x = c(0, 1),
+             replace = TRUE)
+p2 <- sample(size = N,
+             x = c(0, 1),
+             replace = TRUE)
+lat <- rnorm(N, mean = 0 + p1)
+loadings <- c(.5, .8, .7, .9)
+observed <- lat %*% t(loadings) + rnorm(N * length(loadings), sd = .1)
+observed[, 3] <- observed[, 3] + p2 * 0.5 * lat
+cfa.sim <- data.frame(observed, p1 = factor(p1), p2 = factor(p2))
+names(cfa.sim)[1:4] <- paste0("x", 1:4)
 
 ## ----cfadefinition, echo=TRUE-------------------------------------------------
 require("OpenMx");
@@ -56,7 +60,7 @@ mxPath(from="one",to=c("x1"), free=F, value=0, arrows=1),
 mxData(cfa.sim, type = "raw")
 );
 
-## -----------------------------------------------------------------------------
+## ----message=FALSE, echo=TRUE, warning=FALSE----------------------------------
 tree.gc <- semtree(model.cfa, data=cfa.sim, constraints=
                    semtree.constraints(global.invariance = 
                                          c("F__x1","F__x2","F__x3","F__x4")))
@@ -65,7 +69,7 @@ tree.gc <- semtree(model.cfa, data=cfa.sim, constraints=
 ## ----fig.height=3-------------------------------------------------------------
 plot(tree.gc)
 
-## ----warning=FALSE, message=FALSE, error=FALSE--------------------------------
+## ----warning=FALSE, message=FALSE, error=FALSE, echo=TRUE---------------------
 tree.lc <- semtree(model.cfa, data=cfa.sim, constraints=
                    semtree.constraints(
                      local.invariance= c("F__x1","F__x2","F__x3","F__x4")))
@@ -86,7 +90,7 @@ obs <- MASS::mvrnorm(N,mu=c(0,0),
                       Sigma=Sigma)
 obs[,1] <- obs[,1] + ifelse(grp1,3,0)
 obs[,2] <- obs[,2] + ifelse(grp2,3,0)
-df.biv <- data.frame(obs, grp1, grp2)
+df.biv <- data.frame(obs, grp1=factor(grp1), grp2=factor(grp2))
 names(df.biv)[1:2] <- paste0("x",1:2)
 
 
@@ -110,7 +114,7 @@ mxData(df.biv, type = "raw")
 result <- mxRun(model.biv)
 summary(result)
 
-## ----growbivtree--------------------------------------------------------------
+## ----growbivtree, warning=FALSE, message=FALSE--------------------------------
 
 tree.biv <- semtree(model.biv, data=df.biv)
 
@@ -136,14 +140,15 @@ ggplot(data = df.biv.pred, aes(x=x1, y=x2))+
   viridis::scale_color_viridis(discrete=TRUE)+
   theme_classic()
 
-## -----------------------------------------------------------------------------
+## ----bv2, warning=FALSE, message=FALSE----------------------------------------
 
 tree.biv2 <- semtree(model.biv, df.biv, constraints=
                       semtree.constraints(focus.parameters = "mu1"))
 
+## ----plbv2--------------------------------------------------------------------
 plot(tree.biv2)
 
-## -----------------------------------------------------------------------------
+## ----message=FALSE, warning=FALSE---------------------------------------------
 
 tree.biv3 <- semtree(model.biv, df.biv, constraints=
                       semtree.constraints(focus.parameters = "mu2"))

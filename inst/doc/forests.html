@@ -12,30 +12,42 @@
 
 <meta name="author" content="Andreas Brandmaier" />
 
-<meta name="date" content="2022-05-13" />
+<meta name="date" content="2023-11-26" />
 
 <title>SEM Forests</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
@@ -53,55 +65,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -110,13 +121,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -128,7 +146,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -142,18 +340,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">SEM Forests</h1>
 <h4 class="author">Andreas Brandmaier</h4>
-<h4 class="date">2022-05-13</h4>
+<h4 class="date">2023-11-26</h4>
 
 
 
+<p>This example demonstrates how SEM forests can be grown. SEM forests
+are ensembles of typically hundreds to thousands of SEM trees. Using
+permutation-based variable importance estimates, we can aggregate the
+importance of each predictor for improving model fit.</p>
+<p>Here, we use the <code>affect</code> dataset and a simple SEM with
+only a single observed variable and no latent variables.</p>
 <div id="load-data" class="section level2">
 <h2>Load data</h2>
-<p>Load affect dataset from the <code>psychTools</code> package. These are data from two studies conducted in the Personality, Motivation and Cognition Laboratory at Northwestern University to study affect dimensionality and the relationship to various personality dimensions.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psychTools)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Paket &#39;psychTools&#39; wurde unter R Version 4.1.2 erstellt</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(affect)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(affect))</span></code></pre></div>
+<p>Load affect dataset from the <code>psychTools</code> package. These
+are data from two studies conducted in the Personality, Motivation and
+Cognition Laboratory at Northwestern University to study affect
+dimensionality and the relationship to various personality
+dimensions.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(psychTools)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">data</span>(affect)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(affect))</span></code></pre></div>
 <table style="width:100%;">
 <colgroup>
 <col width="5%" />
@@ -336,123 +543,118 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>affect<span class="sc">$</span>Film <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(affect<span class="sc">$</span>Film)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>affect<span class="sc">$</span>lie <span class="ot">&lt;-</span> <span class="fu">as.ordered</span>(affect<span class="sc">$</span>lie)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>affect<span class="sc">$</span>imp <span class="ot">&lt;-</span> <span class="fu">as.ordered</span>(affect<span class="sc">$</span>imp)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>affect<span class="sc">$</span>Film <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(affect<span class="sc">$</span>Film)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>affect<span class="sc">$</span>lie <span class="ot">&lt;-</span> <span class="fu">as.ordered</span>(affect<span class="sc">$</span>lie)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>affect<span class="sc">$</span>imp <span class="ot">&lt;-</span> <span class="fu">as.ordered</span>(affect<span class="sc">$</span>imp)</span></code></pre></div>
 </div>
 <div id="create-simple-model-of-state-anxiety" class="section level2">
 <h2>Create simple model of state anxiety</h2>
-<p>The following code implements a simple SEM with only a single manifest variables and two parameters, the mean of state anxiety after having watched a movie (<code>state2</code>), <span class="math inline">\(\mu\)</span>, and the variance of state anxiety, <span class="math inline">\(\sigma^2\)</span>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OpenMx)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>manifests<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;state2&quot;</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>latents<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">mxModel</span>(<span class="st">&quot;Univariate Normal Model&quot;</span>, </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="at">type=</span><span class="st">&quot;RAM&quot;</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">manifestVars =</span> manifests,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="at">latentVars =</span> latents,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mxPath</span>(<span class="at">from=</span><span class="st">&quot;one&quot;</span>,<span class="at">to=</span>manifests, <span class="at">free=</span><span class="fu">c</span>(<span class="cn">TRUE</span>), </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">value=</span><span class="fu">c</span>(<span class="fl">50.0</span>) , <span class="at">arrows=</span><span class="dv">1</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="st">&quot;mu&quot;</span>) ),</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mxPath</span>(<span class="at">from=</span>manifests,<span class="at">to=</span>manifests, <span class="at">free=</span><span class="fu">c</span>(<span class="cn">TRUE</span>), </span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">value=</span><span class="fu">c</span>(<span class="fl">100.0</span>) , <span class="at">arrows=</span><span class="dv">2</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="st">&quot;sigma2&quot;</span>) ),</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">mxData</span>(affect, <span class="at">type =</span> <span class="st">&quot;raw&quot;</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">mxRun</span>(model)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running Univariate Normal Model with 2 parameters</span></span></code></pre></div>
-<p>These are the estimates of the model when run on the entire sample:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(result)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Summary of Univariate Normal Model </span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  </span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; free parameters:</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     name matrix    row    col  Estimate  Std.Error A</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 sigma2      S state2 state2 115.05414 12.4793862  </span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     mu      M      1 state2  42.45118  0.8226717  </span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Model Statistics: </span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                |  Parameters  |  Degrees of Freedom  |  Fit (-2lnL units)</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        Model:              2                    168              1289.158</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Saturated:              2                    168                    NA</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Independence:              2                    168                    NA</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of observations/statistics: 330/170</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Information Criteria: </span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       |  df Penalty  |  Parameters Penalty  |  Sample-Size Adjusted</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; AIC:       953.1576               1293.158                 1293.194</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; BIC:       314.9100               1300.756                 1294.412</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; CFI: NA </span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; TLI: 1   (also known as NNFI) </span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; RMSEA:  0  [95% CI (NA, NA)]</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Prob(RMSEA &lt;= 0.05): NA</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; To get additional fit indices, see help(mxRefModels)</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; timestamp: 2022-05-13 11:13:15 </span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Wall clock time: 0.05101109 secs </span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; optimizer:  SLSQP </span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; OpenMx version number: 2.20.3 </span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Need help?  See help(mxSummary)</span></span></code></pre></div>
+<p>The following code implements a simple SEM with only a single
+manifest variables and two parameters, the mean of state anxiety after
+having watched a movie (<code>state2</code>), <span class="math inline">\(\mu\)</span>, and the variance of state anxiety,
+<span class="math inline">\(\sigma^2\)</span>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(OpenMx)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>manifests<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">&quot;state2&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>latents<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">mxModel</span>(<span class="st">&quot;Univariate Normal Model&quot;</span>, </span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="at">type=</span><span class="st">&quot;RAM&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="at">manifestVars =</span> manifests,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="at">latentVars =</span> latents,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="fu">mxPath</span>(<span class="at">from=</span><span class="st">&quot;one&quot;</span>,<span class="at">to=</span>manifests, <span class="at">free=</span><span class="fu">c</span>(<span class="cn">TRUE</span>), </span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>       <span class="at">value=</span><span class="fu">c</span>(<span class="fl">50.0</span>) , <span class="at">arrows=</span><span class="dv">1</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="st">&quot;mu&quot;</span>) ),</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="fu">mxPath</span>(<span class="at">from=</span>manifests,<span class="at">to=</span>manifests, <span class="at">free=</span><span class="fu">c</span>(<span class="cn">TRUE</span>), </span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>       <span class="at">value=</span><span class="fu">c</span>(<span class="fl">100.0</span>) , <span class="at">arrows=</span><span class="dv">2</span>, <span class="at">label=</span><span class="fu">c</span>(<span class="st">&quot;sigma2&quot;</span>) ),</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="fu">mxData</span>(affect, <span class="at">type =</span> <span class="st">&quot;raw&quot;</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>);</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">mxRun</span>(model)</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; Running Univariate Normal Model with 2 parameters</span></span></code></pre></div>
+<p>These are the estimates of the model when run on the entire
+sample:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">summary</span>(result)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; Summary of Univariate Normal Model </span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;  </span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; free parameters:</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;     name matrix    row    col  Estimate  Std.Error A</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; 1 sigma2      S state2 state2 115.05414 12.4793862  </span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; 2     mu      M      1 state2  42.45118  0.8226717  </span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; Model Statistics: </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;                |  Parameters  |  Degrees of Freedom  |  Fit (-2lnL units)</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;        Model:              2                    168              1289.158</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;    Saturated:              2                    168                    NA</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; Independence:              2                    168                    NA</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; Number of observations/statistics: 330/170</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; Information Criteria: </span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;       |  df Penalty  |  Parameters Penalty  |  Sample-Size Adjusted</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; AIC:       953.1576               1293.158                 1293.194</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; BIC:       314.9100               1300.756                 1294.412</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; CFI: NA </span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; TLI: 1   (also known as NNFI) </span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; RMSEA:  0  [95% CI (NA, NA)]</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; Prob(RMSEA &lt;= 0.05): NA</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; To get additional fit indices, see help(mxRefModels)</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; timestamp: 2023-11-26 14:28:00 </span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt; Wall clock time: 0.05098987 secs </span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; optimizer:  SLSQP </span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt; OpenMx version number: 2.21.1 </span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt; Need help?  See help(mxSummary)</span></span></code></pre></div>
 </div>
 <div id="forest" class="section level2">
 <h2>Forest</h2>
-<p>Create a forest control object that stores all tuning parameters of the forest. Note that we use only 5 trees for demo purposes. Please increase the number in real applications.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>control <span class="ot">&lt;-</span> <span class="fu">semforest.control</span>(<span class="at">num.trees =</span> <span class="dv">5</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(control)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; SEM-Forest control:</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -----------------</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Number of Trees:  5 </span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Sampling:  subsample </span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Comparisons per Node: 2 </span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  SEM-Tree control:</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  &lt;U+2594&gt;&lt;U+2594&gt;&lt;U+2594&gt;&lt;U+2594&gt;&lt;U+2594&gt;&lt;U+2594&gt;&lt;U+2594&gt;&lt;U+2594&gt;&lt;U+2594&gt;&lt;U+2594&gt; </span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Splitting Method: fair</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Alpha Level: 1</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Bonferroni Correction:FALSE</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Minimum Number of Cases: 20</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Maximum Tree Depth: NA</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Number of CV Folds: 5</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Exclude Heywood Cases: FALSE</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Test Invariance Alpha Level: NA</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Use all Cases: FALSE</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Verbosity: FALSE</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Progress Bar: TRUE</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+25CF&gt; Seed: NA</span></span></code></pre></div>
+<p>Create a forest control object that stores all tuning parameters of
+the forest. Note that we use only 5 trees for illustration. Please
+increase the number in real applications to several hundreds. To speed
+up computation time, consider score-based test for variable selection in
+the trees.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>control <span class="ot">&lt;-</span> <span class="fu">semforest.control</span>(<span class="at">num.trees =</span> <span class="dv">5</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">print</span>(control)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; SEM-Forest control:</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; -----------------</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; Number of Trees:  5 </span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; Sampling:  subsample </span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; Comparisons per Node: 2 </span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt;  SEM-Tree control:</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt;  ▔▔▔▔▔▔▔▔▔▔ </span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; ● Splitting Method: fair</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; ● Alpha Level: 1</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; ● Bonferroni Correction:FALSE</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; ● Minimum Number of Cases: 20</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; ● Maximum Tree Depth: NA</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; ● Number of CV Folds: 5</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; ● Exclude Heywood Cases: FALSE</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; ● Test Invariance Alpha Level: NA</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; ● Use all Cases: FALSE</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; ● Verbosity: FALSE</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; ● Progress Bar: TRUE</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; ● Seed: NA</span></span></code></pre></div>
 <p>Now, run the forest using the <code>control</code> object:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>forest <span class="ot">&lt;-</span> <span class="fu">semforest</span>( <span class="at">model=</span>model,</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> affect, </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">control =</span> control,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">covariates =</span> <span class="fu">c</span>(<span class="st">&quot;Study&quot;</span>,<span class="st">&quot;Film&quot;</span>, <span class="st">&quot;state1&quot;</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;PA2&quot;</span>,<span class="st">&quot;NA2&quot;</span>,<span class="st">&quot;TA2&quot;</span>))</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &gt; Model was not run. Estimating parameters now before running the forest.</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running Univariate Normal Model with 2 parameters</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Beginning initial fit attempt</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running Univariate Normal Model with 2 parameters</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Lowest minimum so far:  1289.15758570645</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Solution found</span></span></code></pre></div>
-<pre><code>#&gt; 
-#&gt;  Solution found!  Final fit=1289.1576 (started at 1387.7841)  (1 attempt(s): 1 valid, 0 errors)
-#&gt;  Start values from best fit:
-#&gt; 115.054144655482,42.4511764378938
-#&gt; &lt;U+2714&gt; Tree construction finished [took 32s].
-#&gt; &lt;U+2714&gt; Tree construction finished [took 30s].
-#&gt; &lt;U+2714&gt; Tree construction finished [took 32s].
-#&gt; &lt;U+2714&gt; Tree construction finished [took 28s].
-#&gt; &lt;U+2714&gt; Tree construction finished [took 21s].
-#&gt; &lt;U+2714&gt; Forest completed [took ~2.5min]</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>forest <span class="ot">&lt;-</span> <span class="fu">semforest</span>( <span class="at">model=</span>model,</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>                     <span class="at">data =</span> affect, </span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>                     <span class="at">control =</span> control,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                     <span class="at">covariates =</span> <span class="fu">c</span>(<span class="st">&quot;Study&quot;</span>,<span class="st">&quot;Film&quot;</span>, <span class="st">&quot;state1&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>                                    <span class="st">&quot;PA2&quot;</span>,<span class="st">&quot;NA2&quot;</span>,<span class="st">&quot;TA2&quot;</span>))</span></code></pre></div>
 </div>
 <div id="variable-importance" class="section level2">
 <h2>Variable importance</h2>
-<p>Next, we compute permutation-based variable importance.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>vim <span class="ot">&lt;-</span> <span class="fu">varimp</span>(forest)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(vim, <span class="at">sort.values=</span><span class="cn">TRUE</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Variable Importance</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Study      Film       PA2       NA2    state1       TA2 </span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.827936 11.281157 11.416595 16.697414 62.229144 72.004270</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(vim)</span></code></pre></div>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAclBMVEUAAAAAADoAAGYAOjoAOpAAZrY6AAA6ADo6AGY6OgA6Ojo6OpA6kNtmAABmADpmZjpmtrZmtv+QOgCQZgCQkDqQkGaQ27aQ2/+2ZgC225C2/7a2//++vr7bkDrb25Db/7bb////tmb/25D//7b//9v///9tf8DCAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAG60lEQVR4nO2dCXfiNhRGIQXSBaYDXfA0dSdm+f9/sdbGEmw+ESuBke49c3IwsRVzR4v1/CxGe7jK6N4n8OggSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBKkFzT6MbijoH9/BBAkSCdou/B18uml3apGc/vubtW+M0eQZ/O8Di9+t552q/F6X4+mCHojqH76NluaN+zP2spC0FHQbjVt/x3ebsZrBJ0JMkbqo5WKGvRGUDV5bTvt0Dc33b10wYI2M2Mk1Jumu48uWVDtB/yl89M9yhcsyPfP28XUyurxU7CgMGjV9hpo2VvivT97FB8hyHTRdms2d70Rgs4EuYtDQ/X0p+uMuA56D3cIXbyH+wnKDAQJCmhiAz9OGiunJd67/30DggQfKahZ9m20bH7umssXJWi7WPZs2O3OYAeCPI0PUpcpaDNrO/+l+dnOLirzeu83zIR+bv3Mm3IF2UlFM1raSlNN3fTUbpgXYR5WsKDw0Y2T7Rc/DbMbNprof12woND/hm6nMW3MbLiAh5+1FizI3RZc+lbV9sbffA1q/LVp8YIM1XhtnNjqEprY2X2e0gW1QqwTo6EZhT7oZKgvWJCtKI2pQXNfedqh3XbQ9qZY5epRwYJsX2NVtJc+tXlpnFThOijc9ilY0LASH42BHyeNlXxBkOBuTSz53/0g7hUwQ1ApgnYrN5r726rJchQzEuSyXJygdDmKGQn66eTGfLocxYwETevp3gtKmKOYkyAXWDSCEuYo5iRoX5vItBGUMEcxK0G71dy6SZmjmJUgM3Gv/FTekCJHMS9B+2reCkqao5iZoM3zL5PXpDmKmQmy0bKkOYq5CdouJv/F5igymy8KBAk+NWCW/G99Ap8ZD0KQK7EwQZVrHdOwNSBglqkge/XTDvPDA2Y5C/Kxn2EBs6wFWSUDA2ZZCwoJDUMCZjkLclP4gQGzTAW5Ucy4GBowy1SQn8Pvhz/Um7ugwQGz3AUNDpjlLmhwwCxzQcMf6s1T0O0lEu4oCgQJaGICAmYCBAn0SVdhgnHxtEZPicUJOk7GLh/t7SoRQaLEYgX5JraZfV2MRnPzlG+nLATN7GT16YWYtONS0NzHzo6zs7MSixMUomQHQf4hTQQ5LmsQgs5AkABBAgQJEJS6RMIdRYEgwQc1seSl3o2PCZgh6FqJpQiy3zhi5+tvFwjsyZwKJRYiqLHRniqsXnb+OwS5xd1cRgeCujjmItoFAr8bSWHJrvFf47X1V087jixE0EkC2eFuhvlh8sua0XhtVg/arfqmGiUIsjXH9tGngtz0K6xv9tyX3VGEoL3Np/eddBDklp0yfVDlnobuKLEgQXubsnkqqD4IMg/69ma5FiAohDIa15oua9D2y99fOseyQgSFUawJNcjdxfDPILSCdqtfO1tYKYLaocouRuEXCNytzGPh7bWjcdPY3Lu+PNdSBLmphr0iNI88m62vJ9dB+54xjNn8gc1vnS0sN94vqO7PBM6J9wrazLq76OzIqLf4GD71rsajcGdBj/72bZ8ZQQIECRAkQJAAQQIECRAkQJCAqYYAQQIECRAkQJAAQQIECRAkQJAAQQIECRAkQJAgsaCmZ1GhC45rncYe4p46itrbJMdNbzqdftIKsplVMad0XOs09hCfbRKzdzN5dSutRZ/OFZIKMl/AERKIr3NY6zT2kO3CCIra2+10Q9lXSSro2hKvXbT/u7GH1JM/Jq9xf+CQl3Pr6XSSVpA9tb7vF72kenqJPKTdzX43TMzezdM/C9u/3Xo6nSQV5Np7dKs36Wtxh4Qvz4na264KYVIIbzydbu4oqAl9tD4kfP1SnKCxrziPJ+imOu3WOo06xO4U3cRcp2MyTh+uid3SK/oc0KhDDovIRu3tjLR2Hq+TvmFcDWudxh9SxQ7z7umk5hGH+fgrs+Nap9GHVNEXinVQ+XAXii5JOOaEfKNx+da3TDWi9m7CNCa27CswWRUgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgAYIECBIgSIAgwf+G9ttnPXO0+QAAAABJRU5ErkJggg==" /><!-- --></p>
-<p>From this, we can learn that variables such as <code>NA2</code> representing negative affect (after the movie), <code>TA2</code> representing tense arousal (after the movie), and <code>state1</code> representing the state anxiety before having watched the movie, are the best predictors of difference in the distribution of state anxiety (in either mean, variance or both) after having watched the movie.</p>
+<p>Next, we compute permutation-based variable importance. This may take
+some time.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>vim <span class="ot">&lt;-</span> <span class="fu">varimp</span>(forest)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">print</span>(vim, <span class="at">sort.values=</span><span class="cn">TRUE</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; Variable Importance</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;     Study      Film       NA2       PA2       TA2    state1 </span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;  7.746036 11.281160 27.829022 28.542936 67.803211 99.084569</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="fu">plot</span>(vim)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>From this, we can learn that variables such as <code>NA2</code>
+representing negative affect (after the movie), <code>TA2</code>
+representing tense arousal (after the movie), and <code>state1</code>
+representing the state anxiety before having watched the movie, are the
+best predictors of difference in the distribution of state anxiety (in
+either mean, variance or both) after having watched the movie.</p>
 </div>
 
 

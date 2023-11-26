@@ -67,7 +67,7 @@ varimp <- function(forest,
       max.level = NA,
       eval.fun = eval.fun,
       method = method,
-      conditional = conditional
+      constraints = forest$constraints
     ),
     SIMPLIFY = FALSE,
     USE.NAMES = TRUE,
@@ -95,7 +95,7 @@ varimp <- function(forest,
   
   # completeley experimental, probably not a wise idea to use this
   if (method == "prune") {
-    temp <- mapply(
+    temp <- future.apply::future_mapply(
       varimpTree,
       forest$forest,
       forest$forest.data,

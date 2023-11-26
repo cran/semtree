@@ -14,26 +14,38 @@
 
 <title>Getting Started with the semtree package</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
@@ -51,55 +63,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -108,13 +119,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -126,7 +144,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -138,98 +336,121 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<h1 class="title toc-ignore">Getting Started with the semtree package</h1>
+<h1 class="title toc-ignore">Getting Started with the semtree
+package</h1>
 
 
 
 <div id="load-the-package" class="section level2">
 <h2>Load the Package</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(semtree)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OpenMx)</span></code></pre></div>
+<p>We first load the <code>semtree</code> package and the
+<code>OpenMx</code> package for specifying our SEM.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(semtree)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(OpenMx)</span></code></pre></div>
 </div>
 <div id="simulate-data" class="section level2">
 <h2>Simulate data</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">23</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>icept <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="dv">3</span>, <span class="at">sd =</span> <span class="fl">1.2</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),<span class="at">size=</span>N,<span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>loadings <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">4</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> (slope<span class="sc">+</span>p1<span class="sc">*</span><span class="dv">5</span>) <span class="sc">%*%</span> <span class="fu">t</span>(loadings)<span class="sc">+</span><span class="fu">matrix</span>(<span class="fu">rep</span>(icept, <span class="at">each=</span>M),<span class="at">byrow=</span><span class="cn">TRUE</span>,<span class="at">ncol=</span>M)<span class="sc">+</span><span class="fu">rnorm</span>(N<span class="sc">*</span>M, <span class="at">sd=</span>.<span class="dv">08</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>growth.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x,p1)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(growth.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;X&quot;</span>,<span class="dv">1</span><span class="sc">:</span>M),<span class="st">&quot;P1&quot;</span>)</span></code></pre></div>
+<p>Now, we simulate some data from a linear latent growth curve model
+(that is, a random intercept and random slope over time). The dataset
+will be called <code>growth.data</code>. The dataset contains five
+observations for each individual (<code>X1</code> to <code>X5</code>)
+and one predictor <code>P1</code>. The predictor is dichotomous and
+predicts a (quite large) difference in mean slope.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">23</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>icept <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="dv">10</span>, <span class="at">sd =</span> <span class="dv">4</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>slope <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(N, <span class="dv">3</span>, <span class="at">sd =</span> <span class="fl">1.2</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">size =</span> N, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>loadings <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>x <span class="ot">&lt;-</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  (slope <span class="sc">+</span> p1 <span class="sc">*</span> <span class="dv">5</span>) <span class="sc">%*%</span> <span class="fu">t</span>(loadings) <span class="sc">+</span> </span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="fu">rep</span>(icept, <span class="at">each =</span> M), <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">ncol =</span> M) <span class="sc">+</span> </span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>  <span class="fu">rnorm</span>(N <span class="sc">*</span> M, <span class="at">sd =</span> .<span class="dv">08</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>growth.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, <span class="fu">factor</span>(p1))</span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="fu">names</span>(growth.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;X&quot;</span>, <span class="dv">1</span><span class="sc">:</span>M), <span class="st">&quot;P1&quot;</span>)</span></code></pre></div>
 </div>
 <div id="specify-an-openmx-model" class="section level2">
 <h2>Specify an OpenMx model</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>manifests <span class="ot">&lt;-</span> <span class="fu">names</span>(growth.data)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>growthCurveModel <span class="ot">&lt;-</span> <span class="fu">mxModel</span>(<span class="st">&quot;Linear Growth Curve Model Path Specification&quot;</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">type=</span><span class="st">&quot;RAM&quot;</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">manifestVars=</span>manifests,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">latentVars=</span><span class="fu">c</span>(<span class="st">&quot;intercept&quot;</span>,<span class="st">&quot;slope&quot;</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mxData</span>(growth.data, <span class="at">type=</span><span class="st">&quot;raw&quot;</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># residual variances</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">from=</span>manifests,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">2</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">TRUE</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">values =</span> <span class="fu">c</span>(.<span class="dv">1</span>, .<span class="dv">1</span>, .<span class="dv">1</span>, .<span class="dv">1</span>, .<span class="dv">1</span>),</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels=</span><span class="fu">c</span>(<span class="st">&quot;residual&quot;</span>,<span class="st">&quot;residual&quot;</span>,<span class="st">&quot;residual&quot;</span>,<span class="st">&quot;residual&quot;</span>,<span class="st">&quot;residual&quot;</span>)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># latent variances and covariance</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">from=</span><span class="fu">c</span>(<span class="st">&quot;intercept&quot;</span>,<span class="st">&quot;slope&quot;</span>),</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">2</span>,</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">connect=</span><span class="st">&quot;unique.pairs&quot;</span>,</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">TRUE</span>,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels=</span><span class="fu">c</span>(<span class="st">&quot;vari&quot;</span>, <span class="st">&quot;cov&quot;</span>, <span class="st">&quot;vars&quot;</span>)</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># intercept loadings</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">from=</span><span class="st">&quot;intercept&quot;</span>,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">to=</span>manifests,</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">1</span>,</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">FALSE</span>,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># slope loadings</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">from=</span><span class="st">&quot;slope&quot;</span>,</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">to=</span>manifests,</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">1</span>,</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">FALSE</span>,</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># manifest means</span></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">from=</span><span class="st">&quot;one&quot;</span>,</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">to=</span>manifests,</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">1</span>,</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">FALSE</span>,</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># latent means</span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">from=</span><span class="st">&quot;one&quot;</span>,</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">to=</span><span class="fu">c</span>(<span class="st">&quot;intercept&quot;</span>, <span class="st">&quot;slope&quot;</span>),</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">1</span>,</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">TRUE</span>,</span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>),</span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels=</span><span class="fu">c</span>(<span class="st">&quot;meani&quot;</span>, <span class="st">&quot;means&quot;</span>)</span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>) <span class="co"># close model</span></span></code></pre></div>
+<p>Now, we specify a linear latent growth curve model using OpenMx’s
+path specification. The model has five observed variables. Residual
+variances are assumed to be identical over time.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>manifests <span class="ot">&lt;-</span> <span class="fu">names</span>(growth.data)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>growthCurveModel <span class="ot">&lt;-</span> <span class="fu">mxModel</span>(<span class="st">&quot;Linear Growth Curve Model Path Specification&quot;</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="at">type=</span><span class="st">&quot;RAM&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>       <span class="at">manifestVars=</span>manifests,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">latentVars=</span><span class="fu">c</span>(<span class="st">&quot;intercept&quot;</span>,<span class="st">&quot;slope&quot;</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="fu">mxData</span>(growth.data, <span class="at">type=</span><span class="st">&quot;raw&quot;</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    <span class="co"># residual variances</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>        <span class="at">from=</span>manifests,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">2</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">TRUE</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>        <span class="at">values =</span> <span class="fu">c</span>(.<span class="dv">1</span>, .<span class="dv">1</span>, .<span class="dv">1</span>, .<span class="dv">1</span>, .<span class="dv">1</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>        <span class="at">labels=</span><span class="fu">c</span>(<span class="st">&quot;residual&quot;</span>,<span class="st">&quot;residual&quot;</span>,<span class="st">&quot;residual&quot;</span>,<span class="st">&quot;residual&quot;</span>,<span class="st">&quot;residual&quot;</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a>    ),</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>    <span class="co"># latent variances and covariance</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>        <span class="at">from=</span><span class="fu">c</span>(<span class="st">&quot;intercept&quot;</span>,<span class="st">&quot;slope&quot;</span>),</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">2</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>        <span class="at">connect=</span><span class="st">&quot;unique.pairs&quot;</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">TRUE</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>        <span class="at">labels=</span><span class="fu">c</span>(<span class="st">&quot;vari&quot;</span>, <span class="st">&quot;cov&quot;</span>, <span class="st">&quot;vars&quot;</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>    ),</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>    <span class="co"># intercept loadings</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>        <span class="at">from=</span><span class="st">&quot;intercept&quot;</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a>        <span class="at">to=</span>manifests,</span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">1</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">FALSE</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a>    ),</span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a>    <span class="co"># slope loadings</span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a>        <span class="at">from=</span><span class="st">&quot;slope&quot;</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a>        <span class="at">to=</span>manifests,</span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">1</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">FALSE</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a>    ),</span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a>    <span class="co"># manifest means</span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a>        <span class="at">from=</span><span class="st">&quot;one&quot;</span>,</span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a>        <span class="at">to=</span>manifests,</span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">1</span>,</span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">FALSE</span>,</span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a>    ),</span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a>    <span class="co"># latent means</span></span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a>    <span class="fu">mxPath</span>(</span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a>        <span class="at">from=</span><span class="st">&quot;one&quot;</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a>        <span class="at">to=</span><span class="fu">c</span>(<span class="st">&quot;intercept&quot;</span>, <span class="st">&quot;slope&quot;</span>),</span>
+<span id="cb3-52"><a href="#cb3-52" tabindex="-1"></a>        <span class="at">arrows=</span><span class="dv">1</span>,</span>
+<span id="cb3-53"><a href="#cb3-53" tabindex="-1"></a>        <span class="at">free=</span><span class="cn">TRUE</span>,</span>
+<span id="cb3-54"><a href="#cb3-54" tabindex="-1"></a>        <span class="at">values=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb3-55"><a href="#cb3-55" tabindex="-1"></a>        <span class="at">labels=</span><span class="fu">c</span>(<span class="st">&quot;meani&quot;</span>, <span class="st">&quot;means&quot;</span>)</span>
+<span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a>    )</span>
+<span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a>) <span class="co"># close model</span></span>
+<span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a></span>
+<span id="cb3-59"><a href="#cb3-59" tabindex="-1"></a><span class="co"># fit the model to the entire dataset</span></span>
+<span id="cb3-60"><a href="#cb3-60" tabindex="-1"></a>growthCurveModel <span class="ot">&lt;-</span> <span class="fu">mxRun</span>(growthCurveModel)</span>
+<span id="cb3-61"><a href="#cb3-61" tabindex="-1"></a><span class="co">#&gt; Running Linear Growth Curve Model Path Specification with 6 parameters</span></span></code></pre></div>
 </div>
 <div id="run-a-tree" class="section level2">
 <h2>Run a tree</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">semtree</span>(<span class="at">model =</span> growthCurveModel, <span class="at">data =</span> growth.data)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+2716&gt; Variable P1 is numeric but has only few unique values. Consider recoding as ordered factor.</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;U+2714&gt; Tree construction finished [took 2s].</span></span></code></pre></div>
+<p>Now, we grow a SEM tree using the <code>semtree</code> function,
+which takes the model and the dataset as input. If not specified
+otherwise, SEM tree will assume that all variables in the dataset, which
+are not observed variables in the dataset are potential predictors.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">semtree</span>(<span class="at">model =</span> growthCurveModel, </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>                <span class="at">data =</span> growth.data)</span></code></pre></div>
 </div>
 <div id="plotting" class="section level2">
 <h2>Plotting</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tree)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Once the tree is grown, we can plot it:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">plot</span>(tree)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 
 

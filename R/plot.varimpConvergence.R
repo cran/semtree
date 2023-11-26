@@ -1,16 +1,20 @@
-
-#vim <- varimp(forest, return.vector=T)
-
 nacumsum <- function(x) {
 	x[is.na(x)] <- 0
 	return(cumsum(x))
 }
 
-plot.varimpConvergence <- function( vim, lty=NULL, idx=NULL, 
+nacummedian  <- function(x) {
+  x[is.na(x)] <- 0
+  sapply(1:length(x), function(xx){median(x[1:xx])})
+}
+
+plot.varimpConvergence <- function( x, lty=NULL, idx=NULL, 
                                      legend.x="topright", clw=4, 
                                      legend.cex=1.5,ylim=NULL,
                                      ...) {
 
+  vim <- x
+  
 impsum <- apply(vim$importance, 2, nacumsum)
 
 M <- ncol(impsum)
@@ -26,7 +30,6 @@ if (is.null(idx)) {
 	idx <- 1:N
 }
 
-#colors = c("black","blue","green","red","orange","purple","pink")
 colors = grDevices::rainbow(M)
 
 pdata <- matrix(0, nrow=N, ncol=M)

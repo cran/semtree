@@ -36,8 +36,8 @@ naiveSplit <-
       modelnew <-
         eval(parse(
           text = paste(
-            model@Options$model.type,
-            '(parTable(model),data=mydata,missing=\'',
+            "lavaan::",model@Options$model.type,
+            '(lavaan::parTable(model),data=mydata,missing=\'',
             model@Options$missing,
             '\',do.fit=F)',
             sep = ""
@@ -191,7 +191,7 @@ naiveSplit <-
               if (!is.na(LL.return)) {
                 LL.within <- cbind(LL.within, (LL.baseline - LL.return))
                 #within.split <- cbind(within.split, (val.sets[i]+val.sets[(i-1)])/2)
-                #browser()
+
                 within.split <- cbind(within.split, as.character(val.sets[i - 1]))
                 cov.col <- cbind(cov.col, cur_col)
                 cov.name <- cbind(cov.name, colnames(mydata[cur_col]))

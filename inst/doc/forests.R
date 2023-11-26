@@ -39,7 +39,7 @@ summary(result)
 control <- semforest.control(num.trees = 5)
 print(control)
 
-## -----------------------------------------------------------------------------
+## ----message=FALSE, echo=TRUE, warning=FALSE, results="hide"------------------
 forest <- semforest( model=model,
                      data = affect, 
                      control = control,

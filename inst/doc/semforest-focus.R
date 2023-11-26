@@ -28,6 +28,8 @@ obs[,2] <- obs[,2] + ifelse(grp2==1,3,0)
 df.biv <- data.frame(obs, grp1, grp2, noise)
 names(df.biv)[1:2] <- paste0("x",1:2)
 manifests<-c("x1","x2")
+
+## -----------------------------------------------------------------------------
 model.biv <- mxModel("Bivariate_Model", 
                      type="RAM",
                      manifestVars = manifests,
@@ -52,27 +54,21 @@ df.biv.pred <- data.frame(df.biv,
   viridis::scale_color_viridis(discrete=TRUE)+
   theme_classic()
 
-## -----------------------------------------------------------------------------
+## ----message=FALSE,eval=TRUE, results="hide"----------------------------------
 fp <- "mu2" # predicted by grp2
 #fp <- "mu1" # predicted by grp1
 
 tree.biv <- semtree(model.biv, data=df.biv, constraints = list(focus.parameters=fp))
 
+## -----------------------------------------------------------------------------
 plot(tree.biv)
 
 
-## -----------------------------------------------------------------------------
-fp <- "mu2" # predicted by grp2
+## ----message=FALSE, warning=FALSE,results="hide"------------------------------
 forest <- semforest(model.biv, data=df.biv,
                     constraints = list(focus.parameters=fp),
                     control=semforest.control(num.trees=10, control=semtree.control(method="score",alpha=1)))
 
-
-## -----------------------------------------------------------------------------
-
-forest <- semforest(model.biv, data=df.biv, 
-                    constraints = list(focus.parameters=fp),
-                    control=semforest.control(num.trees=5, control=semtree.control(method="score")))
 
 ## -----------------------------------------------------------------------------
 plot(forest$forest[[1]])

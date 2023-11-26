@@ -33,8 +33,6 @@ fairSplit <-
       return(NULL))
     n.comp <- 0
     
-    #browser()
-    
     if (control$report.level > 2) {
       report("Phase I - Select within variables", 1)
     }
@@ -381,7 +379,6 @@ fairSplit <-
               test2 <- data.frame(test2, test1)
             }
             test2 <- test2[, -1]
-            #browser()
             
             
             if (result$num_sets == 1) {
@@ -443,7 +440,8 @@ fairSplit <-
             #warning("LL.sum is NA after reestimation with focus parameter")
             ui_warn(
               "Could not estimate constrained/focus model for variable ",
-              colnames(cross2)[cur_col],
+#              colnames(cross2)[cur_col],
+              names(mydata[cov.btn.cols[cur_col]]),
               ". Possibly choosing a suboptimal split."
             )
             LL.baseline <- NA
@@ -455,8 +453,6 @@ fairSplit <-
         LL.cur <-
           LL.baseline - fitSubmodels(model, subset1, subset2, control, invariance =
                                        NULL)
-        # browser()
-        #if(is.null(LL.cur)) LL.cur <- NA
         
         # cross2 == subset of data for Phase II
         

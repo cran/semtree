@@ -14,11 +14,14 @@ N <- 1000
 M <- 5
 icept <- rnorm(N, 10, sd = 4)
 slope <- rnorm(N, 3, sd = 1.2)
-p1 <- sample(c(0,1),size=N,replace=TRUE)
+p1 <- sample(c(0, 1), size = N, replace = TRUE)
 loadings <- 0:4
-x <- (slope+p1*5) %*% t(loadings)+matrix(rep(icept, each=M),byrow=TRUE,ncol=M)+rnorm(N*M, sd=.08)
-growth.data <- data.frame(x,p1)
-names(growth.data) <- c(paste0("X",1:M),"P1")
+x <-
+  (slope + p1 * 5) %*% t(loadings) + 
+  matrix(rep(icept, each = M), byrow = TRUE, ncol = M) + 
+  rnorm(N * M, sd = .08)
+growth.data <- data.frame(x, factor(p1))
+names(growth.data) <- c(paste0("X", 1:M), "P1")
 
 ## -----------------------------------------------------------------------------
 manifests <- names(growth.data)[1:5]
@@ -79,8 +82,12 @@ growthCurveModel <- mxModel("Linear Growth Curve Model Path Specification",
     )
 ) # close model
 
-## -----------------------------------------------------------------------------
-tree <- semtree(model = growthCurveModel, data = growth.data)
+# fit the model to the entire dataset
+growthCurveModel <- mxRun(growthCurveModel)
+
+## ----message=FALSE,warning=FALSE,results="hide"-------------------------------
+tree <- semtree(model = growthCurveModel, 
+                data = growth.data)
 
 ## -----------------------------------------------------------------------------
 plot(tree)

@@ -82,6 +82,36 @@ evaluateDataLikelihood <-
       
       
       
+    } else if (inherits(model, "ctsemFit")) {
+      
+      select_ctsem_data <- intersect(colnames(model$mxobj$data$observed),
+                                     colnames(data))
+      
+      model_ctsem <- ctsemOMX::ctFit(dat = data[select_ctsem_data],
+                                     ctmodelobj = model$ctmodelobj,
+                                     dataform = "wide",
+                                     stationary = model$ctfitargs$stationary,
+                                     fit = FALSE)
+      
+      model_up <- OpenMx::omxSetParameters(
+        model = model_ctsem$mxobj,
+        labels = names(OpenMx::omxGetParameters(model_ctsem$mxobj)),
+        free = FALSE,
+        values = model$mxobj$output$estimate)
+      
+      full_mxdata <- OpenMx::mxData(observed = model_ctsem$mxobj$data$observed,
+                                    type = "raw")
+      
+      model_up <- setData(model = model_up, data = full_mxdata)
+      
+      model_up <- OpenMx::mxRun(
+        model = model_up,
+        silent = TRUE,
+        useOptimizer = FALSE,
+        suppressWarnings = TRUE)
+      
+      return(getLikelihood(model_up))
+      
     } else if (inherits(model, "lavaan")) {
       # replace data
       #model <- mxAddNewModelData(model=model,data=data)
@@ -97,18 +127,18 @@ evaluateDataLikelihood <-
       ll <- NA
       
       tryCatch({
-      modelrun <- lavaan::lavaan(
-        lavaan::parTable(model),
-        data = data,
-        control = list(
-          optim.method = "none",
-          optim.force.converged = TRUE
+        modelrun <- lavaan::lavaan(
+          lavaan::parTable(model),
+          data = data,
+          control = list(
+            optim.method = "none",
+            optim.force.converged = TRUE
+          )
         )
-      )
-      
-      # evaluate likelihood
-      ll <- -2 * lavaan::logLik(modelrun)
-
+        
+        # evaluate likelihood
+        ll <- -2 * lavaan::logLik(modelrun)
+        
       },error = function(e) {
         ui_warn("Could not evaluate lavaan model likelihood. Lavaan had the following error:\n ",e)
         
