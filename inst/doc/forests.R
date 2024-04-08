@@ -36,7 +36,7 @@ result <- mxRun(model)
 summary(result)
 
 ## -----------------------------------------------------------------------------
-control <- semforest.control(num.trees = 5)
+control <- semforest_control(num.trees = 5)
 print(control)
 
 ## ----message=FALSE, echo=TRUE, warning=FALSE, results="hide"------------------

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Andreas Brandmaier" />
 
-<meta name="date" content="2023-11-26" />
+<meta name="date" content="2024-04-08" />
 
 <title>SEM Forests</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">SEM Forests</h1>
 <h4 class="author">Andreas Brandmaier</h4>
-<h4 class="date">2023-11-26</h4>
+<h4 class="date">2024-04-08</h4>
 
 
 
@@ -596,8 +596,8 @@ sample:</p>
 <span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; RMSEA:  0  [95% CI (NA, NA)]</span></span>
 <span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; Prob(RMSEA &lt;= 0.05): NA</span></span>
 <span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; To get additional fit indices, see help(mxRefModels)</span></span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; timestamp: 2023-11-26 14:28:00 </span></span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt; Wall clock time: 0.05098987 secs </span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; timestamp: 2024-04-08 14:03:39 </span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt; Wall clock time: 0.03678489 secs </span></span>
 <span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; optimizer:  SLSQP </span></span>
 <span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt; OpenMx version number: 2.21.1 </span></span>
 <span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt; Need help?  See help(mxSummary)</span></span></code></pre></div>
@@ -609,7 +609,7 @@ the forest. Note that we use only 5 trees for illustration. Please
 increase the number in real applications to several hundreds. To speed
 up computation time, consider score-based test for variable selection in
 the trees.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>control <span class="ot">&lt;-</span> <span class="fu">semforest.control</span>(<span class="at">num.trees =</span> <span class="dv">5</span>)</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>control <span class="ot">&lt;-</span> <span class="fu">semforest_control</span>(<span class="at">num.trees =</span> <span class="dv">5</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">print</span>(control)</span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; SEM-Forest control:</span></span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; -----------------</span></span>
